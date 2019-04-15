@@ -1,47 +1,44 @@
 import * as types from './actionTypes.js'
 import axios from 'axios'
+import {message} from 'antd';
 
-let getAddAction = (payload)=>{
+let getFetchAction = ()=>{
 	return {
-		type:types.ADD_ITEM,
-		payload		
+		type:types.LOGIN_FETCH
 	}
 }
 
-let getChangeAction = (payload)=>{
+let getFetchDoneAction = ()=>{
 	return {
-		type:types.CHANGE_ITEM,
-		payload		
+		type:types.LOGIN_DONE
 	}
 }
 
-let getDelAction = (payload)=>{
-	return {
-		type:types.DEL_ITEM,
-		payload		
-	}
-}
-
-let getInitAction = payload=>{
-	return {
-		type:types.INIT_ITEM,
-		payload		
-	}
-}
-
-let loadInitDataAction = ()=>{
+let getLoginAction = (values)=>{
 	return dispatch=>{
-		axios
-		.get('http://127.0.0.1:3000/')
+        // this.setState(()=>({isFetching:true}))
+        dispatch(getFetchAction())
+		axios({
+		  method:'post',
+		  url:'http://127.0.0.1:3000/admin/login',
+		  data:values
+		})
 		.then(response=>{
-			const action = getInitAction(response.data)
-			dispatch(action)
-
+			console.log(response);
+			if(response.data.code==0){//登陆成功
+				window.location.href = '/'
+			}else if(response.data.code==1){
+				message.error(response.data.message)
+			}
 		})
 		.catch(err=>{
-			console.log(err)
+			message.error('服务器错误，请稍后重试')
+		})
+		.finally(()=>{
+			dispatch(getFetchDoneAction())
+			// this.setState(()=>({isFething:false}))
 		})
 	}
 }
 
-export {getAddAction,getChangeAction,getDelAction,loadInitDataAction}
+export {getLoginAction}

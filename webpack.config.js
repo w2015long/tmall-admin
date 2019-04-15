@@ -101,7 +101,7 @@ module.exports = {
 	//启动一个服务器(webpack-dev-server)实时动态刷新页面
     devServer: {
     	contentBase: './dist',
-    	port:8080,//服务运行的端口
+    	port:3001,//服务运行的端口
     	historyApiFallback:true
     }		
 };

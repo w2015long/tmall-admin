@@ -1,21 +1,29 @@
 
-
 import React,{Component} from 'react';
+import { connect } from 'react-redux'
 import {
-  Form, Icon, Input, Button, Checkbox,
+  Form, Icon, Input, Button, message,
 } from 'antd';
+import {actionCreator} from './store/'
+import axios from 'axios'
+
 import './index.css';
 
 class NormalLoginForm extends Component {
   constructor(props){
   	super(props);
+  	/*
+  	this.state = {
+  		isFetching:false
+  	}
+  	*/
   	this.handleSubmit = this.handleSubmit.bind(this)
   }		
   handleSubmit(e){
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+      	this.props.handleLogin(values)
       }
     });
   }
@@ -26,10 +34,10 @@ class NormalLoginForm extends Component {
     	<div className="Login">
 	      <Form onSubmit={this.handleSubmit} className="login-form">
 	        <Form.Item>
-	          {getFieldDecorator('userName', {
+	          {getFieldDecorator('username', {
 	            rules: [
 	            	{ required: true, message: '请输入用户名!' },
-	            	{pattern:/^[a-z|\d]{3,6}$/i,message:'用户名3-6位字符'}
+	            	{pattern:/^[a-z\d_]{3,6}$/i,message:'用户名是字符和下划线3-6位'}
 	            ],
 	          })(
 	            <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
@@ -39,14 +47,19 @@ class NormalLoginForm extends Component {
 	          {getFieldDecorator('password', {
 	            rules: [
 	            	{ required: true, message: '请输入密码!' },
-	            	{pattern:/^[a-z|\d]{3,6}$/i,message:'密码3-6位字符'}
+	            	{pattern:/^[\w]{3,6}$/i,message:'密码3-6位字符'}
 	            ],
 	          })(
 	            <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
 	          )}
 	        </Form.Item>
 	        <Form.Item>
-	          <Button type="primary" htmlType="submit" className="login-form-button">
+	          <Button
+	          	type="primary"
+	          	htmlType="submit"
+	          	className="login-form-button"
+	          	loading={this.props.isFetching}
+	          	>
 	            登陆
 	          </Button>
 	        </Form.Item>
@@ -56,6 +69,25 @@ class NormalLoginForm extends Component {
   }
 }
 
+const mapStateToProps = state => {
+	console.log(state.get('loginReducer').get('isFetching'))
+	return{
+		isFetching:state.get('loginReducer').get('isFetching')
+	}
+}
+
+const mapDispatchToProps = dispatch=>{
+	return{
+		handleLogin:(values)=>{
+			// console.log(values)
+			const action = actionCreator.getLoginAction(values)
+			dispatch(action)
+		}
+	}
+}
 
 const WrappedNormalLoginForm = Form.create({ name: 'normal_login' })(NormalLoginForm);
-export default WrappedNormalLoginForm
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WrappedNormalLoginForm)

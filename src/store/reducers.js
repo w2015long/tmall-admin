@@ -1,8 +1,8 @@
 
 import { combineReducers } from 'redux-immutable'
 
-import todolistReducer from '../pages/todolist/store/'
+import loginReducer from '../pages/login/store/'
 
 export default combineReducers({
-	todolistReducer
+	loginReducer
 })
