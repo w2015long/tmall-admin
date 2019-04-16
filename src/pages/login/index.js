@@ -70,7 +70,6 @@ class NormalLoginForm extends Component {
 }
 
 const mapStateToProps = state => {
-	console.log(state.get('loginReducer').get('isFetching'))
 	return{
 		isFetching:state.get('loginReducer').get('isFetching')
 	}

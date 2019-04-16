@@ -1,10 +1,12 @@
 import React,{Component,Fragment} from 'react';
 import {
-	// HashRouter as Router, 
 	BrowserRouter as Router,
 	Route,
-
+	Redirect,
+	Switch
 } from "react-router-dom"
+
+import {getUserName} from 'util'
 
 import Login from './pages/login'
 import Home from './pages/home'
@@ -19,12 +21,34 @@ class App extends Component{
 
 
 	render() {
+		const ProtectRoute = ({component:Home,...rest})=>(
+			<Route
+				{...rest}
+				render={(props)=>(
+					getUserName()
+					? <Home {...props} />
+					: <Redirect to="/login" />
+				)}
+			 />			
+		)
 
+		const LoginRoute = ({component:Component,...rest})=>(
+			<Route
+				render={()=>(
+					getUserName()
+					? <Redirect to="/" />
+					: <Component {...rest} />
+				)}
+			/>
+
+		)
 		return(
 			<Router>
 				<div className="App">
-					<Route exact path="/" component={Home} />
-					<Route path="/login" component={Login} />
+					<Switch>
+						<ProtectRoute exact path="/" component={Home} />
+						<LoginRoute path="/login" component={Login} />
+					</Switch>		
 				</div>
 			</Router>
 		) 

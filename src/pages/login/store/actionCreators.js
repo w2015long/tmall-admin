@@ -1,6 +1,10 @@
 import * as types from './actionTypes.js'
-import axios from 'axios'
+import {request,setUserName} from 'util'
+import { ADMIN_LOGIN } from 'api'
 import {message} from 'antd';
+
+import axios from 'axios'
+
 
 let getFetchAction = ()=>{
 	return {
@@ -18,17 +22,19 @@ let getLoginAction = (values)=>{
 	return dispatch=>{
         // this.setState(()=>({isFetching:true}))
         dispatch(getFetchAction())
-		axios({
+		request({
 		  method:'post',
-		  url:'http://127.0.0.1:3000/admin/login',
+		  url:ADMIN_LOGIN,
 		  data:values
 		})
-		.then(response=>{
-			console.log(response);
-			if(response.data.code==0){//登陆成功
+		.then(result=>{
+			// console.log('?>>>>>>>>>>>',result);
+			if(result.code==0){//登陆成功
+				//保存登陆用户到浏览器客户端
+				setUserName(result.data.username)
 				window.location.href = '/'
-			}else if(response.data.code==1){
-				message.error(response.data.message)
+			}else if(result.code==1){
+				message.error(result.message)
 			}
 		})
 		.catch(err=>{
@@ -38,6 +44,8 @@ let getLoginAction = (values)=>{
 			dispatch(getFetchDoneAction())
 			// this.setState(()=>({isFething:false}))
 		})
+	
+		
 	}
 }
 
