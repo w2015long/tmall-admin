@@ -8,8 +8,10 @@ import {
 
 import {getUserName} from 'util'
 
-import Login from './pages/login'
-import Home from './pages/home'
+import Login from 'pages/login'
+import Home from 'pages/home'
+import User from 'pages/user'
+import Err from 'common/err'
 
 import './App.css';
 
@@ -21,12 +23,12 @@ class App extends Component{
 
 
 	render() {
-		const ProtectRoute = ({component:Home,...rest})=>(
+		const ProtectRoute = ({component:Component,...rest})=>(
 			<Route
 				{...rest}
 				render={(props)=>(
 					getUserName()
-					? <Home {...props} />
+					? <Component {...props} />
 					: <Redirect to="/login" />
 				)}
 			 />			
@@ -47,7 +49,9 @@ class App extends Component{
 				<div className="App">
 					<Switch>
 						<ProtectRoute exact path="/" component={Home} />
+						<ProtectRoute path="/user" component={User} />
 						<LoginRoute path="/login" component={Login} />
+						<Route component={Err} />
 					</Switch>		
 				</div>
 			</Router>

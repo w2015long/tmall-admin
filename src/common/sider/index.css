@@ -1,9 +1,9 @@
-.AdminHeader .ant-menu-item{
-	font-size: 26px;
-	font-weight: bold;
-	color:#f88;
+.AdminSider .ant-menu-item:after{
+	border-right:none;
 }
-.AdminHeader .ant-dropdown-link.ant-dropdown-trigger{
-	font-size: 20px;
-	/*float: right;*/
+.AdminSider .ant-menu-item{
+	background: transparent !important;
+}
+.AdminSider a.active{
+	color: #1890ff;
 }

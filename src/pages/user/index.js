@@ -4,14 +4,14 @@ import {getUserName} from 'util'
 import AdminLayout from 'common/layout'
 import './index.css';
 
-class Home extends Component{
+class User extends Component{
 	render(){
 		return (
 			<AdminLayout>
-				welcome index
+				welcome user page
 			</AdminLayout>
 		)
 	}
 }
 
-export default Home
+export default User

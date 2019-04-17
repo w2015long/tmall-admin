@@ -1,6 +1,9 @@
-.AdminHeader .ant-menu-item{
+.AdminHeader .logo{
+	float: left;
 	font-size: 26px;
 	font-weight: bold;
+}
+.AdminHeader .logo a{
 	color:#f88;
 }
 .AdminHeader .ant-dropdown-link.ant-dropdown-trigger{
