@@ -1,47 +1,32 @@
 import * as types from './actionTypes.js'
-import axios from 'axios'
+import {request,setUserName} from 'util'
+import { ADMIN_COUNT } from 'api'
 
-let getAddAction = (payload)=>{
+
+const setCountAction = payload=>{
 	return {
-		type:types.ADD_ITEM,
-		payload		
+		type:types.SET_COUNT,
+		payload
 	}
 }
-
-let getChangeAction = (payload)=>{
-	return {
-		type:types.CHANGE_ITEM,
-		payload		
-	}
-}
-
-let getDelAction = (payload)=>{
-	return {
-		type:types.DEL_ITEM,
-		payload		
-	}
-}
-
-let getInitAction = payload=>{
-	return {
-		type:types.INIT_ITEM,
-		payload		
-	}
-}
-
-let loadInitDataAction = ()=>{
-	return dispatch=>{
-		axios
-		.get('http://127.0.0.1:3000/')
-		.then(response=>{
-			const action = getInitAction(response.data)
-			dispatch(action)
-
+let getCountAction = (payload)=>{
+	return (dispatch)=>{
+		request({
+			url:ADMIN_COUNT
+		})
+		.then(result=>{
+			if(result.code == 0){
+				const action = setCountAction(result.data)
+				dispatch(action)
+			}
 		})
 		.catch(err=>{
 			console.log(err)
-		})
+		})			
 	}
 }
 
-export {getAddAction,getChangeAction,getDelAction,loadInitDataAction}
+
+
+
+export {getCountAction}

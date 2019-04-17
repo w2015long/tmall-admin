@@ -12,9 +12,11 @@ const defaultState = fromJS({
 export default (state=defaultState,action)=>{
 	switch (action.type) {
 		case LOGIN_FETCH:
-	  		return state.set('isFetching',true)	 
+	  		return state.set('isFetching',true)
+	  		break;	 
 		case LOGIN_DONE:
-	  		return state.set('isFetching',false)		  		 			  		
+	  		return state.set('isFetching',false)
+	  		break;		  		 			  		
 		default:
 	  		return state
 	}
