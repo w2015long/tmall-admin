@@ -1,18 +1,17 @@
 
 import { fromJS } from 'immutable'
 
-import {SET_PAGE} from './actionTypes.js'
+import {SET_PAGE,PAGE_DONE,PAGE_REQUEST} from './actionTypes.js'
 
 //用fromJS生成一个immutable对象
 const defaultState = fromJS({
-		list:[{
-			  _id: '1',
-			  username: '胡彦斌',
-			  isAdmin: false,
-			  email: 'w2015long@qq.com',
-			  phone: '18868869699',
-			  createAt:'2019-04-17 19:20:30'
-			}],
+
+		//从服务器获取数据
+		list:[],
+		current:1,
+		pageSize:10,
+		total:0	,
+		isFetching:false
 })
 
 
@@ -20,9 +19,18 @@ export default (state=defaultState,action)=>{
 	switch (action.type) {
 		case SET_PAGE:
 	  		return state.merge({
-	  			list:fromJS(action.payload.list)
+	  			list:fromJS(action.payload.list),
+	  			current:action.payload.current,
+	  			pageSize:action.payload.pageSize,
+	  			total:action.payload.total
 	  		})
-	  		break;	  		
+	  		break;
+		case PAGE_REQUEST:
+	  		return state.set('isFetching',true)
+	  		break;	
+		case PAGE_DONE:
+	  		return state.set('isFetching',false)
+	  		break;		  			  			  		
 		default:
 	  		return state
 	}

@@ -43,11 +43,13 @@ const columns = [{
 
 class User extends Component{
 	componentDidMount(){
-		this.props.handlePage()
+		this.props.handlePage(1)
 	}	
 	render(){
 		//list immuatble数据
-		const {list} = this.props
+		const {list,current,total,pageSize,handlePage,isFetching} = this.props
+		// console.log(total)
+
 		const dataSource = list.map(user=>{
 			return {
 			  key: user.get('_id'),
@@ -55,13 +57,31 @@ class User extends Component{
 			  isAdmin: user.get('isAdmin'),
 			  email: user.get('email'),
 			  phone: user.get('phone'),
-			  createAt:user.get('createAt')			
+			  createAt:moment(user.get('createAt')).format('YYYY年MM月DD日 HH:mm:ss')			
 			}
-		}).toJS()
+		}).toJS()//toJS()方法把imuatble数据转换为数组
 		return (
 			<div className="User">
 				<AdminLayout>
-					<Table dataSource={dataSource} columns={columns} />
+					<Table
+						//表格数据
+						dataSource={dataSource}
+						columns={columns}
+						//分页配置
+						pagination={{
+							current:current,
+							pageSize:pageSize,
+							total:total
+						}}
+						onChange={(page)=>{
+							console.log(page)
+							handlePage(page.current)
+						}}
+						loading={{
+							spinning:isFetching,
+							tip:'正在加载数据'
+						}}
+					/>
 				</AdminLayout>
 			</div>	
 		)
@@ -70,7 +90,11 @@ class User extends Component{
 
 const mapStateToProps = state => {
 	return{
-		list:state.get('userReducer').get('list')
+		list:state.get('userReducer').get('list'),
+		current:state.get('userReducer').get('current'),
+		pageSize:state.get('userReducer').get('pageSize'),
+		total:state.get('userReducer').get('total'),
+		isFetching:state.get('userReducer').get('isFetching')
 
 	}
 }
