@@ -5,7 +5,7 @@ import moment from 'moment'
 import {getUserName} from 'util'
 import {actionCreator} from './store/'
 import AdminLayout from 'common/layout'
-import { Table, Divider, Tag } from 'antd';
+import { Table, Breadcrumb  } from 'antd';
 import './index.css';
 
 
@@ -63,6 +63,10 @@ class User extends Component{
 		return (
 			<div className="User">
 				<AdminLayout>
+					  <Breadcrumb>
+					    <Breadcrumb.Item>首页</Breadcrumb.Item>
+					    <Breadcrumb.Item>用户列表</Breadcrumb.Item>
+					  </Breadcrumb>				
 					<Table
 						//表格数据
 						dataSource={dataSource}
