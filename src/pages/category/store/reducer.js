@@ -6,6 +6,7 @@ import {SET_PAGE,PAGE_DONE,PAGE_REQUEST} from './actionTypes.js'
 //用fromJS生成一个immutable对象
 const defaultState = fromJS({
 		isAddFetching:false,
+		levelOneCategories:[],
 		list:[],
 		current:1,
 		pageSize:10,

@@ -43,14 +43,14 @@ class CategoryAdd extends Component{
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
           if (!err) {
+          	console.log(values)
             this.props.handleAdd(values);
           }
         });
     }  
 	render(){
-	    const {
-	      getFieldDecorator, getFieldsError, getFieldError, isFieldTouched,
-	    } = this.props.form;
+	    const {getFieldDecorator} = this.props.form;
+	    const {isAddFetching,levelOneCategories} = this.props
 		return (
 			<div className="CategoryAdd">
 				<AdminLayout>
@@ -60,7 +60,7 @@ class CategoryAdd extends Component{
 					    <Breadcrumb.Item>添加分类</Breadcrumb.Item>
 					  </Breadcrumb>
 					<Row>
-				      <Col span={12} push={4}>
+				      <Col span={12} offset={6}>
 						  <Form {...formItemLayout} onSubmit={this.handleSubmit}>
 					        <Form.Item
 					          label="分类名称"
@@ -83,6 +83,11 @@ class CategoryAdd extends Component{
 					          })(
 						      <Select>
 						        <Option value="0">顶级分类</Option>
+						        {
+						        	levelOneCategories.map(category=>{
+						        		return <Option key={category.get('_id')} value={category.get('_id')}>顶级分类/{category.get('name')}</Option>
+						        	})
+						        }
 						      </Select>
 					          )}
 					        </Form.Item>					        
@@ -90,7 +95,7 @@ class CategoryAdd extends Component{
 					          <Button
 					          type="primary"
 					          htmlType="submit"
-					          loading={this.props.isAddFetching}
+					          loading={isAddFetching}
 					          >添加分类</Button>
 					        </Form.Item>				        					  
 						  </Form>
@@ -106,6 +111,7 @@ const mapStateToProps = state => {
 	return{
 
 		isAddFetching:state.get('categoryReducer').get('isAddFetching')
+		levelOneCategories:state.get('categoryReducer').get('levelOneCategories')
 
 	}
 }

@@ -23,13 +23,14 @@ let getAddCategoryAction = (values)=>{
 	return (dispatch)=>{
 		dispatch(getAddRequestAction())
 		request({
+			method:'post',
 			url:GET_CATEGORIES,
 			data:{
 				values
 			}
 		})
 		.then(result=>{
-			console.log('get users:::',result)
+			console.log('get result:::',result)
 			if(result.code == 0){
 				const action = setPageAction(result.data)
 				dispatch(action)
