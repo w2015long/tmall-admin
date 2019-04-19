@@ -43,11 +43,13 @@ class CategoryAdd extends Component{
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
           if (!err) {
-          	console.log(values)
             this.props.handleAdd(values);
           }
         });
-    }  
+    } 
+    componentDidMount(){
+    	this.props.getLevelOneCategories()
+    } 
 	render(){
 	    const {getFieldDecorator} = this.props.form;
 	    const {isAddFetching,levelOneCategories} = this.props
@@ -60,7 +62,7 @@ class CategoryAdd extends Component{
 					    <Breadcrumb.Item>添加分类</Breadcrumb.Item>
 					  </Breadcrumb>
 					<Row>
-				      <Col span={12} offset={6}>
+				      <Col span={12} offset={4}>
 						  <Form {...formItemLayout} onSubmit={this.handleSubmit}>
 					        <Form.Item
 					          label="分类名称"
@@ -78,14 +80,17 @@ class CategoryAdd extends Component{
 					        >
 					          {getFieldDecorator('pid', {
 					            rules: [{
-					              required: true, 
+					              required: true,message: '请输入父级分类!' 
 					            }],
 					          })(
 						      <Select>
 						        <Option value="0">顶级分类</Option>
 						        {
 						        	levelOneCategories.map(category=>{
-						        		return <Option key={category.get('_id')} value={category.get('_id')}>顶级分类/{category.get('name')}</Option>
+						        		return <Option 
+						        		key={category.get('_id')}
+						        		value={category.get('_id')}
+						        		>顶级分类/{category.get('name')}</Option>
 						        	})
 						        }
 						      </Select>
@@ -110,7 +115,7 @@ class CategoryAdd extends Component{
 const mapStateToProps = state => {
 	return{
 
-		isAddFetching:state.get('categoryReducer').get('isAddFetching')
+		isAddFetching:state.get('categoryReducer').get('isAddFetching'),
 		levelOneCategories:state.get('categoryReducer').get('levelOneCategories')
 
 	}
@@ -119,12 +124,17 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch=>{
 	return{
 		handleAdd:(values)=>{
+			// console.log(values)
 			const action = actionCreator.getAddCategoryAction(values)
+			dispatch(action)
+		},
+		getLevelOneCategories:()=>{
+			const action = actionCreator.getLevelOneCategoriesAction()
 			dispatch(action)
 		}
 	}
 }
-const WappedCategoryAdd = Form.create({ name: 'horizontal_login' })(CategoryAdd)
+const WappedCategoryAdd = Form.create()(CategoryAdd)
 
 export default connect(
   mapStateToProps,
