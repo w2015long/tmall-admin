@@ -3,6 +3,16 @@ import {message} from 'antd'
 import {request,setUserName} from 'util'
 import { ADD_CATEGORIES,GET_CATEGORIES } from 'api'
 
+const getPageRequestAction = ()=>{
+	return {
+		type:types.PAGE_REQUEST
+	}
+}
+const getPageDoneAction = ()=>{
+	return {
+		type:types.PAGE_DONE
+	}
+}
 
 const getAddRequestAction = ()=>{
 	return {
@@ -81,5 +91,28 @@ let getLevelOneCategoriesAction = ()=>{
 	}
 }
 
-
-export {getAddCategoryAction,getLevelOneCategoriesAction}
+let getPageAction = (pid,page)=>{
+	return (dispatch)=>{
+		dispatch(getPageRequestAction())
+		request({
+			method:'get',
+			url:GET_CATEGORIES,
+			data:{pid,page}
+		})
+		.then(result=>{
+			console.log('getPageCategory:',result)
+			if(result.code == 0){//获取category分页数据成功
+				const action = setPageAction(result.data)
+				dispatch(action)					
+			}
+		})
+		.catch(err=>{
+			message.error(result.message)
+			console.log(err)
+		})	
+		.finally(()=>{
+			dispatch(getPageDoneAction())
+		})		
+	}	
+}
+export {getAddCategoryAction,getLevelOneCategoriesAction,getPageAction}
