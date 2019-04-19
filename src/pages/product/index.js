@@ -1,8 +1,8 @@
 
 import React,{Component} from 'react';
 import {Switch,Route} from "react-router-dom"
-import CategoryList from './list.js'
-import CategoryAdd from './add.js'
+import ProductList from './list.js'
+import ProductSave from './save.js'
 
 class Product extends Component{
 
@@ -10,8 +10,8 @@ class Product extends Component{
 
 		return (
 			<Switch>
-				<Route path="/product/add" component={ProductSave}/>
-				<Route path="/product/:pid?" component={ProductList}/>
+				<Route path="/product/save" component={ProductSave}/>
+				<Route path="/product/" component={ProductList}/>
 			</Switch>
 		)
 	}

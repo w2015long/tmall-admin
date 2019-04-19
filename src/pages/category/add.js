@@ -4,7 +4,6 @@ import {Link} from "react-router-dom"
 import { connect } from 'react-redux'
 import {actionCreator} from './store/'
 import AdminLayout from 'common/layout'
-import CategoryList from './list.js'
 import {Breadcrumb,Form, Input, Tooltip, Icon, Cascader, 
 	Select, Row, Col, Checkbox, Button, AutoComplete } from 'antd';
 
