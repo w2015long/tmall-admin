@@ -19,10 +19,6 @@ import './App.css';
 
 
 class App extends Component{
-	constructor(props){
-		super(props);
-	}
-
 
 	render() {
 		const ProtectRoute = ({component:Component,...rest})=>(

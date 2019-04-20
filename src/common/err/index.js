@@ -7,15 +7,13 @@ class Err extends Component{
 	render(){
 		return (
 			<div className="Err">
-				<Err>
-				    <Alert
-			      	  message="好像走丢了!"
-			      	  description="您访问的页面好像去火星了"
-				      type="error"
-				      closable
-				    />
-				    <Link to="/"/>
-				</Err>
+			    <Alert
+		      	  message="好像走丢了!"
+		      	  description="您访问的页面好像去火星了"
+			      type="error"
+			      closable
+			    />
+			    <Link to="/">返回首页</Link>
 			</div>
 		)
 	}
