@@ -24,7 +24,7 @@ class ProductList extends Component{
 						</Col>
 						<Col span={6} offset={12}>
 							<Button type="primary">
-								<Link to="/product/add">添加商品</Link>
+								<Link to="/product/save">添加商品</Link>
 							</Button>
 						</Col>
 					  </Row>										

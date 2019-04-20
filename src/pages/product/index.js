@@ -7,7 +7,6 @@ import ProductSave from './save.js'
 class Product extends Component{
 
 	render(){
-
 		return (
 			<Switch>
 				<Route path="/product/save" component={ProductSave}/>
