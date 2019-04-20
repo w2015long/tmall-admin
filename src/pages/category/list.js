@@ -38,11 +38,15 @@ class CategoryList extends Component{
 	}	
 	render(){
 		 const {isPageFetching,current,
-		 	pageSize,total,
-		 	list,handleOrder,
+		 	pageSize,total,list,
+		 	handlePage,
+		 	handleOrder,
 		 	updateNameModalVisible,
 		 	showUpdateNameModal,
+		 	updateName,
 		 	closeUpdateNameModal,
+		 	handleChangeName,
+		 	handleOkUpdateName,
 		 } = this.props
 		 const {pid} = this.state
 		const columns = [{
@@ -73,7 +77,7 @@ class CategoryList extends Component{
 		    <span>
 		      <Button
 		      	onClick={()=>{
-		      		showUpdateNameModal()
+		      		showUpdateNameModal(record.id,record.name)
 		      	}}
 		      ><a   href="javascript:;">修改名称</a></Button>
 		      	{
@@ -126,6 +130,8 @@ class CategoryList extends Component{
 							total:total
 						}}
 						onChange={(page)=>{
+							// console.log(page)
+							handlePage(pid,page.current)
 						}}
 						loading={{
 							spinning:isPageFetching,
@@ -135,12 +141,20 @@ class CategoryList extends Component{
 			        <Modal
 			          title="修改分类名称"
 			          visible={updateNameModalVisible}
-			          onOk={this.handleOk}
+			          onOk={()=>{
+			          	handleOkUpdateName(pid)
+			          }}
 			          onCancel={closeUpdateNameModal}
 			          cancelText="取消"
 			          okText="确定"
 			        >
-			        <Input/>
+			        <Input
+			        	value={updateName}
+			        	onChange={(ev)=>{
+			        		// console.log(ev.target.value)
+			        		handleChangeName(ev.target.value)
+			        	}}
+			        />
 			        </Modal>									  
 				</AdminLayout>
 		)
@@ -154,6 +168,8 @@ const mapStateToProps = state => {
 		total:state.get('categoryReducer').get('total'),
 		isPageFetching:state.get('categoryReducer').get('isPageFetching'),
 		updateNameModalVisible:state.get('categoryReducer').get('updateNameModalVisible'),
+		updateName:state.get('categoryReducer').get('updateName'),
+		updateId:state.get('categoryReducer').get('updateId'),
 
 	}
 }
@@ -168,14 +184,22 @@ const mapDispatchToProps = dispatch=>{
 			const action = actionCreator.getOrderAction(pid,id,newOreder)
 			dispatch(action)			
 		},
-		showUpdateNameModal:()=>{
-			const action = actionCreator.showUpdateNameModalAction()
+		showUpdateNameModal:(updateId,updateName)=>{
+			const action = actionCreator.showUpdateNameModalAction(updateId,updateName)
 			dispatch(action)			
 		},
 		closeUpdateNameModal:()=>{
 			const action = actionCreator.closeUpdateNameModalAction()
 			dispatch(action)			
-		}		
+		},
+		handleChangeName:(newName)=>{
+			const action = actionCreator.handleChangeNameAction(newName)
+			dispatch(action)
+		},
+		handleOkUpdateName:(pid)=>{
+			const action = actionCreator.handleOkUpdateNameAction(pid)
+			dispatch(action)			
+		}
 	}
 }
 

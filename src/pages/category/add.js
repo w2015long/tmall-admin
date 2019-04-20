@@ -4,8 +4,8 @@ import {Link} from "react-router-dom"
 import { connect } from 'react-redux'
 import {actionCreator} from './store/'
 import AdminLayout from 'common/layout'
-import {Breadcrumb,Form, Input, Tooltip, Icon, Cascader, 
-	Select, Row, Col, Checkbox, Button, AutoComplete } from 'antd';
+import {Breadcrumb,Form, Input,
+	Select, Row, Col,  Button } from 'antd';
 
 const { Option } = Select;
 

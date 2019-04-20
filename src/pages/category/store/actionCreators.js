@@ -1,7 +1,11 @@
 import * as types from './actionTypes.js'
 import {message} from 'antd'
-import {request,setUserName} from 'util'
-import { ADD_CATEGORIES,GET_CATEGORIES,UPDATE_CATEGORIES_ORDERS } from 'api'
+import {request} from 'util'
+import { ADD_CATEGORIES,
+	GET_CATEGORIES,
+	UPDATE_CATEGORIES_ORDERS,
+	UPDATE_CATEGORIES_NAME
+} from 'api'
 
 const getPageRequestAction = ()=>{
 	return {
@@ -143,11 +147,8 @@ let getPageAction = (pid,page)=>{
 	}	
 }
 
-const showModalAction = ()=>{
-	return {
-		type:types.SHOW_UPDATE_NAME_MODAL
-	}
-}
+
+
 const closeModalAction = ()=>{
 	return {
 		type:types.CLOSE_UPDATE_NAME_MODAL
@@ -155,9 +156,13 @@ const closeModalAction = ()=>{
 }
 
 
-let showUpdateNameModalAction = ()=>{
-	return (dispatch)=>{
-		dispatch(showModalAction())
+let showUpdateNameModalAction = (updateId,updateName)=>{
+	return {
+		type:types.SHOW_UPDATE_NAME_MODAL,
+		payload:{
+			updateId,
+			updateName
+		}
 	}
 }
 
@@ -166,10 +171,52 @@ let closeUpdateNameModalAction = ()=>{
 		dispatch(closeModalAction())
 	}
 }
+let handleChangeNameAction = (newName)=>{
+	return {
+		type:types.CHANGE_NAME,
+		payload:{
+			newName
+		}
+	}	
+}
+let handleOkUpdateNameAction = (pid)=>{
+	return (dispatch,getState)=>{
+		const state = getState().get('categoryReducer')
+		request({
+			method:'put',
+			url:UPDATE_CATEGORIES_NAME,
+			data:{
+				pid,
+				id:state.get('updateId'),
+				name:state.get('updateName'),
+				page:state.get('current'),
+			}
+		})
+		.then(result=>{
+			console.log('get name::',result)
+			if(result.code == 0){//更新name成功
+				message.success(result.message)
+				dispatch(closeModalAction())
+				const action = setPageAction(result.data)
+				dispatch(action)
+				
+			}else{
+				message.error(result.message)
+			}
+		})
+		.catch(err=>{
+			message.error('网络错误,请稍后重试')
+			console.log(err)
+		})	
+	
+	}	
+}
 export {getAddCategoryAction,
 	getLevelOneCategoriesAction,
 	getPageAction,
 	getOrderAction,
 	showUpdateNameModalAction,
 	closeUpdateNameModalAction,
+	handleChangeNameAction,
+	handleOkUpdateNameAction,
 }

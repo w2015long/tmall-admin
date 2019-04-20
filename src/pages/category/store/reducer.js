@@ -6,6 +6,7 @@ import {SET_PAGE,PAGE_REQUEST,
 	ADD_CATEGORY_DONE,SET_LEVELONE_CATEGORY,
 	SHOW_UPDATE_NAME_MODAL,
 	CLOSE_UPDATE_NAME_MODAL,
+	CHANGE_NAME,
 } from './actionTypes.js'
 
 //用fromJS生成一个immutable对象
@@ -17,7 +18,9 @@ const defaultState = fromJS({
 		current:1,
 		pageSize:10,
 		total:0	,
-		updateNameModalVisible:false,		
+		updateNameModalVisible:false,
+		updateId:'',
+		updateName:''				
 })
 
 
@@ -29,7 +32,7 @@ export default (state=defaultState,action)=>{
 	  			list:fromJS(action.payload.list),
 	  			current:action.payload.current,
 	  			pageSize:action.payload.pageSize,
-	  			total:action.payload.total
+	  			total:action.payload.total,
 	  		})
 	  		break;
 		case PAGE_REQUEST:
@@ -49,11 +52,19 @@ export default (state=defaultState,action)=>{
 	  		return state.set('levelOneCategories',fromJS(action.payload))
 	  		break;
 		case SHOW_UPDATE_NAME_MODAL:
-	  		return state.set('updateNameModalVisible',true)
+	  		return state.merge({
+	  			updateNameModalVisible:true,
+	  			updateId:action.payload.updateId,
+	  			updateName:action.payload.updateName
+
+	  		})
 	  		break;
 		case CLOSE_UPDATE_NAME_MODAL:
 	  		return state.set('updateNameModalVisible',false)
-	  		break;		  				  				  			  			  			  			  		
+	  		break;	
+		case CHANGE_NAME:
+	  		return state.set('updateName',action.payload.newName)
+	  		break;		  			  				  				  			  			  			  			  		
 		default:
 	  		return state
 	}
