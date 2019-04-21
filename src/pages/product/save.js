@@ -3,7 +3,12 @@ import React,{Component} from 'react';
 import {Link} from "react-router-dom"
 import { connect } from 'react-redux'
 import {actionCreator} from './store/'
+import {UPLOAD_PRODUCT_IMG,UPLOAD_DETAIL_IMG} from 'api'
 import AdminLayout from 'common/layout'
+import UploadImg from 'common/upload-img'
+import RichEditor from 'common/rich-editor'
+
+
 import {Breadcrumb,Form, Input,  Icon,
 	Select, Row, Col, Button,InputNumber } from 'antd';
 
@@ -73,10 +78,20 @@ class ProductSave extends Component{
 	                      )}
 	                    </Form.Item>
 	                    <Form.Item label="商品图片">
-
+	                    	<UploadImg
+	                    		action={UPLOAD_PRODUCT_IMG}
+	                    		max={3}
+	                    		getFileList={
+	                    			fileList=>{
+	                    				console.log(fileList)
+	                    			}
+	                    		}
+	                    	/>
 	                    </Form.Item>	
 	                    <Form.Item label="商品详情">
-
+	                    	<RichEditor
+	                    		url={UPLOAD_DETAIL_IMG}
+	                    	/>
 	                    </Form.Item>
 	                    <Form.Item label="商品库存">
 	                      {getFieldDecorator('stock', {
