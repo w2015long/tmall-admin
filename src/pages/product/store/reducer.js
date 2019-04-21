@@ -1,23 +1,40 @@
 
 import { fromJS } from 'immutable'
 
-import {SET_PAGE,PAGE_REQUEST,
-	PAGE_DONE,ADD_CATEGORY_REQUEST,
-	ADD_CATEGORY_DONE,SET_LEVELONE_CATEGORY,
-	SHOW_UPDATE_NAME_MODAL,
-	CLOSE_UPDATE_NAME_MODAL,
+import {SET_PAGE,
+	PAGE_REQUEST,
+	PAGE_DONE,
+	SET_CATEGORY_ID,
+	SET_IMAGES,
+	SET_DETAIL,
+	SET_CATEGORY_ERROR,
+	SET_IMAGES_ERROR,
+	SET_DETAIL_ERROR,
+	SAVE_REQUEST,
+	SAVE_DONE,
 } from './actionTypes.js'
 
 //用fromJS生成一个immutable对象
 const defaultState = fromJS({
-		isAddFetching:false,
-		levelOneCategories:[],
+		parentCategoryId:'',
+		categoryId:'',
+		images:'',
+		detail:'',
+		categoryValidate:'',
+		selectorMessage:'',
+		imagesValidate:'',
+		imagesMessage:'',
+		detailValidate:'',
+		detailMessage:'',
+		isSaveFetching:false,		
+
+
 		isPageFetching:false,
 		list:[],
 		current:1,
 		pageSize:10,
 		total:0	,
-		updateNameModalVisible:false,		
+
 })
 
 
@@ -38,22 +55,42 @@ export default (state=defaultState,action)=>{
 		case PAGE_DONE:
 	  		return state.set('isPageFetching',false)
 	  		break;
-	
-		case ADD_CATEGORY_REQUEST:
-	  		return state.set('isAddFetching',true)
+		case SAVE_REQUEST:
+	  		return state.set('isSaveFetching',true)
 	  		break;	
-		case ADD_CATEGORY_DONE:
-	  		return state.set('isAddFetching',false)
+		case SAVE_DONE:
+	  		return state.set('isSaveFetching',false)
+	  		break;	  		
+		case SET_IMAGES:
+	  		return state.set('images',action.payload)
 	  		break;	
-		case SET_LEVELONE_CATEGORY:
-	  		return state.set('levelOneCategories',fromJS(action.payload))
-	  		break;
-		case SHOW_UPDATE_NAME_MODAL:
-	  		return state.set('updateNameModalVisible',true)
-	  		break;
-		case CLOSE_UPDATE_NAME_MODAL:
-	  		return state.set('updateNameModalVisible',false)
-	  		break;		  				  				  			  			  			  			  		
+		case SET_DETAIL:
+	  		return state.set('detail',action.payload)
+	  		break;		  		
+		case SET_CATEGORY_ID:
+	  		return state.merge({
+	  			parentCategoryId:action.payload.parentCategoryId,
+	  			categoryId:action.payload.categoryId,
+	  		})
+	  		break;	
+		case SET_CATEGORY_ERROR:
+	  		return state.merge({
+	  			categoryValidate:'error',
+	  			selectorMessage:'请选择商品分类',
+	  		})
+	  		break;	
+		case SET_IMAGES_ERROR:
+	  		return state.merge({
+	  			imagesValidate:'error',
+	  			imagesMessage:'请上传图片',
+	  		})
+	  		break;	
+		case SET_DETAIL_ERROR:
+	  		return state.merge({
+	  			detailValidate:'error',
+	  			detailMessage:'请输入商品详情',
+	  		})
+	  		break;		  			  			  		  				  				  			  			  			  			  		
 		default:
 	  		return state
 	}

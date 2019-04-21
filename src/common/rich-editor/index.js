@@ -8,25 +8,14 @@ class RichEditor extends Component{
     constructor(props){
         super(props);
 		this.toolbar = [
-		  'title',
-		  'bold',
-		  'italic',
-		  'underline',
-		  'strikethrough',
-		  'fontScale',
-		  'color',
-		  'ol',  
-		  'ul', 
-		  'blockquote',
-		  'code', 
-		  'table',
-		  'link',
-		  'image',
-		  'hr', 
-		  'indent',
-		  'outdent',
-		  'alignment',
+		  'title','bold','italic','underline',
+		  'strikethrough','fontScale','color','ol',
+		  'ul','blockquote','code','table','link',
+		  'image','hr','indent','outdent','alignment',
 		]  
+		// 在ajax里添加withCredentials的配置，
+		// 允许其请求携带cookie信息。通过设置withCredentials=true，
+		// 发送Ajax时，Request header中便会带上 Cookie 信息。
 		$.ajaxSetup({
 			// 要在这里设置 请求携带cookie
             xhrFields: {
@@ -36,7 +25,7 @@ class RichEditor extends Component{
         
     }
     componentDidMount(){
-    	new Simditor({
+    	this.simditor = new Simditor({
 		  textarea: this.textarea,
 		  toolbar:this.toolbar,
 		  upload:{
@@ -45,6 +34,9 @@ class RichEditor extends Component{
 		  	fileKey: 'upload'
 		  }
 		});
+		this.simditor.on('valuechanged',()=>{
+			this.props.getRichEditorVal(this.simditor.getValue()) 
+		})
     }
 
     render(){

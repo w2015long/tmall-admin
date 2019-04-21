@@ -96,18 +96,23 @@ class CategorySelector extends Component{
 					</Select>			      
 			      </Col>
 			      <Col span={11} offset={2}>
-					<Select
-					  onChange={this.handlelevelTwo}
-					>
-					  {
-					  	levelTwoCategories.map(levelTwoCategory =>
-					  		<Option key={levelTwoCategory._id}>
-					  			{levelTwoCategory.name}
-					  		</Option>
-					  	)
-					  }
-					</Select>
+				      {
+				      	levelTwoCategories.length
+				      	?<Select
+						  onChange={this.handlelevelTwo}
+						>
+						  {
+						  	levelTwoCategories.map(levelTwoCategory =>
+						  		<Option key={levelTwoCategory._id}>
+						  			{levelTwoCategory.name}
+						  		</Option>
+						  	)
+						  }
+						</Select>
+					    :null
+				      }
 			      </Col>
+
 			    </Row>			
 
 

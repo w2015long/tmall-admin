@@ -1,7 +1,8 @@
 import * as types from './actionTypes.js'
 import {message} from 'antd'
 import {request,setUserName} from 'util'
-import { ADD_CATEGORIES,GET_CATEGORIES,UPDATE_CATEGORIES_ORDERS } from 'api'
+import {SAVE_PRODUCT } from 'api'
+
 
 const getPageRequestAction = ()=>{
 	return {
@@ -14,78 +15,113 @@ const getPageDoneAction = ()=>{
 	}
 }
 
-const getAddRequestAction = ()=>{
+const getSaveRequestAction = ()=>{
 	return {
-		type:types.ADD_CATEGORY_REQUEST
+		type:types.SAVE_REQUEST
 	}
 }
-const getAddDoneAction = ()=>{
+const getSaveDoneAction = ()=>{
 	return {
-		type:types.ADD_CATEGORY_DONE
+		type:types.SAVE_DONE
 	}
 }
+
 const setPageAction = payload=>{
 	return {
 		type:types.SET_PAGE,
 		payload
 	}
 }
-const setCategoryAction = payload=>{
+
+const setCategoryErrAction = ()=>{
 	return {
-		type:types.SET_LEVELONE_CATEGORY,
-		payload
+		type:types.SET_CATEGORY_ERROR
 	}
 }
-let getAddCategoryAction = (values)=>{
-	return (dispatch)=>{
-		dispatch(getAddRequestAction())
-		request({
-			method:'post',
-			url:ADD_CATEGORIES,
-			data:values
-		})
-		.then(result=>{
-			console.log('getAddCategory:',result)
-			if(result.code == 0){//添加成功
-				
-				if(result.data){//添加顶级分类再派发一个aaction更新页面Select下拉框的值
-					const action = setCategoryAction(result.data)
-					dispatch(action)					
-				}
-				message.success('添加分类成功')
-			}else{
-				message.error(result.message)
-			}
-		})
-		.catch(err=>{
-			message.error(result.message)
-			console.log(err)
-		})	
-		.finally(()=>{
-			dispatch(getAddDoneAction())
-		})		
+const setImagesErrAction = ()=>{
+	return {
+		type:types.SET_IMAGES_ERROR
+	}
+}
+const setDetailErrAction = ()=>{
+	return{
+		type:types.SET_DETAIL_ERROR
 	}
 }
 
-let getLevelOneCategoriesAction = ()=>{
-	return (dispatch)=>{
+let getCategoryIdAction = (pid,id)=>{
+	return {
+		type:types.SET_CATEGORY_ID,
+		payload:{
+			parentCategoryId:pid,
+			categoryId:id
+		}
+	}	
+}
+
+let getImagesAction = (fileList)=>{
+	return {
+		type:types.SET_IMAGES,
+		payload:fileList
+	}	
+}
+
+let getRichEditorValAction = (value)=>{
+	return {
+		type:types.SET_DETAIL,
+		payload:value
+	}		
+}
+
+let getSaveAction = (err,values)=>{
+	console.log(err,values)
+	return (dispatch,getState)=>{
+		const state = getState().get('productReducer')
+		const category = state.get('categoryId')
+		const images = state.get('images')
+		const detail = state.get('detail')
+		let hasError = false
+
+		if(err) hasError = true
+
+		if(!category){
+			dispatch(setCategoryErrAction())
+			hasError = true
+		}
+		if(!images){
+			dispatch(setImagesErrAction())
+			hasError = true			
+		}
+		if(!detail){
+			dispatch(setDetailErrAction())
+			hasError = true			
+		}		
+
+		if(hasError) return //如果有err终止程序
+
+		dispatch(getSaveRequestAction())	
 		request({
-			method:'get',
-			url:GET_CATEGORIES,
+			method:'post',
+			url:SAVE_PRODUCT,
 			data:{
-				pid:0
+				...values,
+				category,
+				images,
+				detail
 			}
 		})
 		.then(result=>{
-			console.log('get cate:::',result)
-			if(result.code == 0){//获取分类成功
-				//派发action设置分类Select下拉框的值
-				const action = setCategoryAction(result.data)
-				dispatch(action)
+			console.log('get Save::',result)
+			if(result.code == 0){//保存商品成功
+				// const action = setPageAction(result.data)
+				// dispatch(action)
 			}
 		})
 		.catch(err=>{
 			console.log(err)
+		})
+		.finally(()=>{
+			dispatch(getSaveDoneAction())
 		})	
 	
 	}
@@ -143,33 +179,11 @@ let getPageAction = (pid,page)=>{
 	}	
 }
 
-const showModalAction = ()=>{
-	return {
-		type:types.SHOW_UPDATE_NAME_MODAL
-	}
-}
-const closeModalAction = ()=>{
-	return {
-		type:types.CLOSE_UPDATE_NAME_MODAL
-	}
-}
-
-
-let showUpdateNameModalAction = ()=>{
-	return (dispatch)=>{
-		dispatch(showModalAction())
-	}
-}
-
-let closeUpdateNameModalAction = ()=>{
-	return (dispatch)=>{
-		dispatch(closeModalAction())
-	}
-}
-export {getAddCategoryAction,
-	getLevelOneCategoriesAction,
+export {
 	getPageAction,
 	getOrderAction,
-	showUpdateNameModalAction,
-	closeUpdateNameModalAction,
+	getCategoryIdAction,
+	getImagesAction,
+	getRichEditorValAction,
+	getSaveAction,
 }

@@ -24,14 +24,19 @@ class ProductSave extends Component{
     handleSubmit(e){
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
-          if (!err) {
-
-          }
+        	//err信息统一传递到handleSave函数中处理
+          	this.props.handleSave(err,values)
         });
     } 
 
 	render(){
-	
+		const {handleCategoryId,handleImages,
+			handleRichEditorVal,selectorMessage,
+			categoryValidate,
+			imagesValidate,imagesMessage,
+			detailValidate,detailMessage,
+			isSaveFetching
+		} = this.props
 	    const {getFieldDecorator} = this.props.form;
 		return (
 			<div className="ProductSave">
@@ -49,10 +54,15 @@ class ProductSave extends Component{
 	                        <Input placeholder="商品名称" />
 	                      )}
 	                    </Form.Item>
-	                    <Form.Item label="所属分类">
+	                    <Form.Item 
+	                   		label="所属分类"
+	                   		required={true}
+	                   		validateStatus={categoryValidate}
+	                   		help={selectorMessage}
+	                    >
 	                    	<CategorySelector
 	                    		getCategoryId ={(pid,id)=>{
-	                    			console.log(pid,id)
+	                    			handleCategoryId(pid,id)
 	                    		}}
 	                    	/>
 	                    </Form.Item>
@@ -73,24 +83,40 @@ class ProductSave extends Component{
 	                        	min={0}
 	                        	formatter={value => `${value}元`}
 	                        	parser={value => value.replace('元', '')}
-	                        	onChange={()=>{}}
 	                        />
 	                      )}
 	                    </Form.Item>
-	                    <Form.Item label="商品图片">
+	                    <Form.Item 
+	                    	label="商品图片"
+	                    	required={true}
+	                    	validateStatus={imagesValidate}
+	                    	help={imagesMessage}
+	                    >
 	                    	<UploadImg
 	                    		action={UPLOAD_PRODUCT_IMG}
 	                    		max={3}
 	                    		getFileList={
 	                    			fileList=>{
-	                    				console.log(fileList)
+	                    				// console.log(fileList)
+	                    				handleImages(fileList)
 	                    			}
 	                    		}
 	                    	/>
 	                    </Form.Item>	
-	                    <Form.Item label="商品详情">
+	                    <Form.Item 
+	                    	label="商品详情"
+	                    	required={true}
+	                    	validateStatus={detailValidate}
+	                    	help={detailMessage}	                    	
+	                    >
 	                    	<RichEditor
 	                    		url={UPLOAD_DETAIL_IMG}
+	                    		getRichEditorVal={
+	                    			(value)=>{
+	                    				// console.log(value)
+	                    				handleRichEditorVal(value)
+	                    			}
+	                    		}
 	                    	/>
 	                    </Form.Item>
 	                    <Form.Item label="商品库存">
@@ -113,7 +139,7 @@ class ProductSave extends Component{
 				          <Button
 				          type="primary"
 				          htmlType="submit"
-				          loading={false}
+				          loading={isSaveFetching}
 				          >提交</Button>
 				        </Form.Item>						
 					</Form>
@@ -125,17 +151,34 @@ class ProductSave extends Component{
 }
 const mapStateToProps = state => {
 	return{
-		// isAddFetching:state.get('categoryReducer').get('isAddFetching'),
-		// levelOneCategories:state.get('categoryReducer').get('levelOneCategories')
+		selectorMessage:state.get('productReducer').get('selectorMessage'),
+		categoryValidate:state.get('productReducer').get('categoryValidate'),
+		imagesValidate:state.get('productReducer').get('imagesValidate'),
+		imagesMessage:state.get('productReducer').get('imagesMessage'),
+		detailValidate:state.get('productReducer').get('detailValidate'),
+		detailMessage:state.get('productReducer').get('detailMessage'),
+		isSaveFetching:state.get('productReducer').get('isSaveFetching'),
 	}
 }
 
 const mapDispatchToProps = dispatch=>{
 	return{
-		// handleAdd:(values)=>{
-		// 	const action = actionCreator.getAddCategoryAction(values)
-		// 	dispatch(action)
-		// }
+		handleCategoryId:(pid,id)=>{
+			const action = actionCreator.getCategoryIdAction(pid,id)
+			dispatch(action)
+		},
+		handleImages:(fileList)=>{
+			const action = actionCreator.getImagesAction(fileList)
+			dispatch(action)			
+		},
+		handleRichEditorVal:(value)=>{
+			const action = actionCreator.getRichEditorValAction(value)
+			dispatch(action)			
+		},
+		handleSave:(err,values)=>{
+			const action = actionCreator.getSaveAction(err,values)
+			dispatch(action)				
+		}
 	}
 }
 const WappedProductSave = Form.create()(ProductSave)
