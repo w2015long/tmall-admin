@@ -1,7 +1,7 @@
 import * as types from './actionTypes.js'
 import {message} from 'antd'
 import {request,setUserName} from 'util'
-import {SAVE_PRODUCT } from 'api'
+import {SAVE_PRODUCT,GET_PRODUCTS,UPDATE_PRODUCTS_ORDER } from 'api'
 
 
 const getPageRequestAction = ()=>{
@@ -113,12 +113,15 @@ let getSaveAction = (err,values)=>{
 		.then(result=>{
 			console.log('get Save::',result)
 			if(result.code == 0){//保存商品成功
-				// const action = setPageAction(result.data)
-				// dispatch(action)
+				message.success(result.message)
+				window.location.href = '/product'
+			}else{
+				message.error(result.message)
 			}
 		})
 		.catch(err=>{
 			console.log(err)
+			message.error(result.message)
 		})
 		.finally(()=>{
 			dispatch(getSaveDoneAction())
@@ -127,24 +130,26 @@ let getSaveAction = (err,values)=>{
 	}
 }
 
-let getOrderAction = (pid,id,newOreder)=>{
+let getOrderAction = (id,newOreder)=>{
 	return (dispatch,getState)=>{
-		const state = getState().get('categoryReducer')
+		const state = getState().get('productReducer')
 		request({
 			method:'put',
-			url:UPDATE_CATEGORIES_ORDERS,
+			url:UPDATE_PRODUCTS_ORDER,
 			data:{
-				pid,
 				id,
 				order:newOreder,
 				page:state.get('current')
 			}
 		})
 		.then(result=>{
-			console.log('get order::',result)
+			console.log('get product-order::',result)
 			if(result.code == 0){//更新order成功
+				message.success(result.message)
 				const action = setPageAction(result.data)
 				dispatch(action)
+			}else{
+				message.error(result.message)
 			}
 		})
 		.catch(err=>{
@@ -154,16 +159,16 @@ let getOrderAction = (pid,id,newOreder)=>{
 	}
 }
 
-let getPageAction = (pid,page)=>{
+let getPageAction = (page)=>{
 	return (dispatch)=>{
 		dispatch(getPageRequestAction())
 		request({
 			method:'get',
-			url:GET_CATEGORIES,
-			data:{pid,page}
+			url:GET_PRODUCTS,
+			data:{page}
 		})
 		.then(result=>{
-			console.log('getPageCategory:',result)
+			console.log('getPageProduct:',result)
 			if(result.code == 0){//获取category分页数据成功
 				const action = setPageAction(result.data)
 				dispatch(action)					

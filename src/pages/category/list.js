@@ -148,13 +148,13 @@ class CategoryList extends Component{
 			          cancelText="取消"
 			          okText="确定"
 			        >
-			        <Input
-			        	value={updateName}
-			        	onChange={(ev)=>{
-			        		// console.log(ev.target.value)
-			        		handleChangeName(ev.target.value)
-			        	}}
-			        />
+				        <Input
+				        	value={updateName}
+				        	onChange={(ev)=>{
+				        		// console.log(ev.target.value)
+				        		handleChangeName(ev.target.value)
+				        	}}
+				        />
 			        </Modal>									  
 				</AdminLayout>
 		)

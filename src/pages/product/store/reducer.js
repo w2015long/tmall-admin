@@ -62,15 +62,25 @@ export default (state=defaultState,action)=>{
 	  		return state.set('isSaveFetching',false)
 	  		break;	  		
 		case SET_IMAGES:
-	  		return state.set('images',action.payload)
+	  		return state.merge({
+	  			images:action.payload,
+	  			imagesValidate:'',
+	  			imagesMessage:'',	  			
+	  		})
 	  		break;	
 		case SET_DETAIL:
-	  		return state.set('detail',action.payload)
+	  		return state.merge({
+	  			detail:action.payload,
+	  			detailValidate:'',
+	  			detailMessage:'',	  			
+	  		})
 	  		break;		  		
 		case SET_CATEGORY_ID:
 	  		return state.merge({
 	  			parentCategoryId:action.payload.parentCategoryId,
 	  			categoryId:action.payload.categoryId,
+	  			categoryValidate:'',
+	  			selectorMessage:'',	  			
 	  		})
 	  		break;	
 		case SET_CATEGORY_ERROR:
