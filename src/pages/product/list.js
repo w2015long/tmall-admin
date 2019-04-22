@@ -5,7 +5,7 @@ import {connect} from "react-redux"
 import {actionCreator} from './store/'
 import AdminLayout from 'common/layout'
 import {Breadcrumb,Row,Col,Button,InputNumber,
-	Table,Divider} from 'antd';
+	Table,Divider,Switch} from 'antd';
 
 
 class ProductList extends Component{
@@ -20,7 +20,7 @@ class ProductList extends Component{
 			pageSize,total,list,
 			handlePage,
 			handleOrder,
-
+			handleStatus,
 		} = this.props;
 
 		const dataSource = list.map(product=>{
@@ -56,6 +56,24 @@ class ProductList extends Component{
 		  title: '状态',
 		  dataIndex: 'status',
 		  key: 'status',
+		  render:(status,record)=>(
+		  	<span>
+		  		{
+		  			////0-在售 1-下架
+		  			// console.log('status',status)
+		  		}
+		  		<Switch
+		  			checkedChildren='在售'
+		  			unCheckedChildren='下架'
+		  			defaultChecked={status=='0'?true:false}
+		  			onChange={
+		  				(checked)=>{
+		  					handleStatus(record.id,checked?0:1)
+		  				}
+		  			}
+		  		/>
+		  	</span>
+		  )
 		},{
 		  title: '操作',
 		  dataIndex: 'action',
@@ -63,11 +81,11 @@ class ProductList extends Component{
 		  render: (text, record) => (
 		    <span>
 				<Button>
-					<Link to={"/product"+record.id}>查看详情</Link>
+					<Link to={"/product/"+record.id}>查看详情</Link>
 				</Button>
 		      	<Divider type="vertical" />
 		      	<Button>
-		      		<Link to={"/product/save"+record.id}>修改</Link>
+		      		<Link to={"/product/save/"+record.id}>修改</Link>
 		      	</Button>
 
 		    </span>
@@ -137,7 +155,11 @@ const mapDispatchToProps = (dispatch)=>{
 		handleOrder:(id,newOreder)=>{
 			const action = actionCreator.getOrderAction(id,newOreder)
 			dispatch(action)			
-		},      
+		},
+		handleStatus:(id,newStatus)=>{
+			const action = actionCreator.getStatusAction(id,newStatus)
+			dispatch(action)				
+		}    
     }
 }
 export default connect(

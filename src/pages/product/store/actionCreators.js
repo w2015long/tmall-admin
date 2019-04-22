@@ -1,7 +1,8 @@
 import * as types from './actionTypes.js'
 import {message} from 'antd'
 import {request,setUserName} from 'util'
-import {SAVE_PRODUCT,GET_PRODUCTS,UPDATE_PRODUCTS_ORDER } from 'api'
+import {SAVE_PRODUCT,GET_PRODUCTS,
+	UPDATE_PRODUCTS_ORDER,UPDATE_PRODUCTS_STATUS } from 'api'
 
 
 const getPageRequestAction = ()=>{
@@ -184,6 +185,35 @@ let getPageAction = (page)=>{
 	}	
 }
 
+let getStatusAction = (id,newStatus)=>{
+	return (dispatch,getState)=>{
+		const state = getState().get('productReducer')
+		request({
+			method:'put',
+			url:UPDATE_PRODUCTS_STATUS,
+			data:{
+				id,
+				status:newStatus,
+				page:state.get('current')
+			}
+		})
+		.then(result=>{
+			console.log('get product-status::',result)
+			if(result.code == 0){//更新status成功
+				message.success(result.message)
+			}else{
+				//为了保证前后台数据同步：更新失败后再刷新页面
+				message.error(result.message)
+				const action = setPageAction(result.data)
+				dispatch(action)				
+			}
+		})
+		.catch(err=>{
+			console.log(err)
+		})	
+	
+	}
+}
 export {
 	getPageAction,
 	getOrderAction,
@@ -191,4 +221,5 @@ export {
 	getImagesAction,
 	getRichEditorValAction,
 	getSaveAction,
+	getStatusAction,
 }

@@ -19,6 +19,9 @@ const { Option } = Select;
 class ProductSave extends Component{
     constructor(props){
         super(props);
+        this.state = {
+        	productId:this.props.match.params.productId
+        }
         this.handleSubmit = this.handleSubmit.bind(this)
     }	
     handleSubmit(e){
