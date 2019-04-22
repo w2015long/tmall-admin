@@ -65,10 +65,10 @@ class ProductList extends Component{
 		  		<Switch
 		  			checkedChildren='在售'
 		  			unCheckedChildren='下架'
-		  			defaultChecked={status=='0'?true:false}
+		  			checked={status=='0'?true:false}
 		  			onChange={
 		  				(checked)=>{
-		  					handleStatus(record.id,checked?0:1)
+		  					handleStatus(record.id,checked?'0':'1')
 		  				}
 		  			}
 		  		/>
@@ -103,7 +103,7 @@ class ProductList extends Component{
 					</Breadcrumb>
 					  <Row style={{marginBottom:20}}>
 						<Col span={6}>
-							<h4>商品列表</h4>
+							<h4>添加商品</h4>
 						</Col>
 						<Col span={6} offset={12}>
 							<Button type="primary">

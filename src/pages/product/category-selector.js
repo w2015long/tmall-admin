@@ -21,6 +21,11 @@ class CategorySelector extends Component{
 	componentDidMount(){
 		this.loadLevelOneCategory()
 	}
+
+	static getDerivedStateFromProps(props,state){
+		const {parentCategoryId,categoryId} = props
+		return null
+	}
 	loadLevelOneCategory(){
 		request({
 			method:'get',

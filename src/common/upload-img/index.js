@@ -16,6 +16,11 @@ class UploadImg extends Component{
 		this.handleCancel = this.handleCancel.bind(this)         
     }		
 
+    static getDerivedStateFromProps(props, state){
+    	const {fileList} = props
+    	console.log('getDerivedStateFromProps',fileList)
+    	return null
+    }
 
 	handleCancel (){
 		this.setState({ previewVisible: false })

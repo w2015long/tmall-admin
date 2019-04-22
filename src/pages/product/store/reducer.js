@@ -12,14 +12,20 @@ import {SET_PAGE,
 	SET_DETAIL_ERROR,
 	SAVE_REQUEST,
 	SAVE_DONE,
+	SET_PRODUCT_DETAIL,
 } from './actionTypes.js'
 
 //用fromJS生成一个immutable对象
 const defaultState = fromJS({
 		parentCategoryId:'',
 		categoryId:'',
+		name:'',
 		images:'',
 		detail:'',
+		price:'',
+		stock:'',
+		description:'',
+
 		categoryValidate:'',
 		selectorMessage:'',
 		imagesValidate:'',
@@ -100,7 +106,20 @@ export default (state=defaultState,action)=>{
 	  			detailValidate:'error',
 	  			detailMessage:'请输入商品详情',
 	  		})
-	  		break;		  			  			  		  				  				  			  			  			  			  		
+	  		break;
+
+		case SET_PRODUCT_DETAIL:
+	  		return state.merge({
+				parentCategoryId:action.payload.category.pid,  			
+				categoryId:action.payload.category._id,
+				description:action.payload.description,			
+				name:action.payload.name,
+				images:action.payload.images,			
+				price:action.payload.price,			
+				stock:action.payload.stock,			
+				detail:action.payload.detail,			
+	  		})
+	  		break;		  				  			  			  		  				  				  			  			  			  			  		
 		default:
 	  		return state
 	}

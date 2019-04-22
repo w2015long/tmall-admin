@@ -11,3 +11,5 @@ export const SET_IMAGES_ERROR = 'product@set_images_error';
 export const SET_DETAIL_ERROR = 'product@set_detail_error';
 export const SAVE_REQUEST = 'product@save_request';
 export const SAVE_DONE = 'product@save_done';
+export const SET_PRODUCT_DETAIL = 'product@set_product_detail';
+

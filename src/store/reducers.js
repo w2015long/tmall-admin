@@ -11,5 +11,6 @@ export default combineReducers({
 	loginReducer,
 	homeReducer,
 	userReducer,
+	categoryReducer,
 	productReducer,
 })

@@ -2,7 +2,8 @@ import * as types from './actionTypes.js'
 import {message} from 'antd'
 import {request,setUserName} from 'util'
 import {SAVE_PRODUCT,GET_PRODUCTS,
-	UPDATE_PRODUCTS_ORDER,UPDATE_PRODUCTS_STATUS } from 'api'
+	UPDATE_PRODUCTS_ORDER,UPDATE_PRODUCTS_STATUS,
+	GET_PRODUCT_DETAIL } from 'api'
 
 
 const getPageRequestAction = ()=>{
@@ -50,6 +51,13 @@ const setDetailErrAction = ()=>{
 	}
 }
 
+const setProductDetailAction = (payload)=>{
+	return{
+		type:types.SET_PRODUCT_DETAIL,
+		payload
+	}
+}
+
 let getCategoryIdAction = (pid,id)=>{
 	return {
 		type:types.SET_CATEGORY_ID,
@@ -75,7 +83,6 @@ let getRichEditorValAction = (value)=>{
 }
 
 let getSaveAction = (err,values)=>{
-	console.log(err,values)
 	return (dispatch,getState)=>{
 		const state = getState().get('productReducer')
 		const category = state.get('categoryId')
@@ -170,7 +177,7 @@ let getPageAction = (page)=>{
 		})
 		.then(result=>{
 			console.log('getPageProduct:',result)
-			if(result.code == 0){//获取category分页数据成功
+			if(result.code == 0){//获取Product分页数据成功
 				const action = setPageAction(result.data)
 				dispatch(action)					
 			}
@@ -201,11 +208,11 @@ let getStatusAction = (id,newStatus)=>{
 			console.log('get product-status::',result)
 			if(result.code == 0){//更新status成功
 				message.success(result.message)
-			}else{
-				//为了保证前后台数据同步：更新失败后再刷新页面
-				message.error(result.message)
+				//为了保证前后台数据同步(刷新页面)
 				const action = setPageAction(result.data)
-				dispatch(action)				
+				dispatch(action)					
+			}else{
+				message.error(result.message)
 			}
 		})
 		.catch(err=>{
@@ -213,6 +220,31 @@ let getStatusAction = (id,newStatus)=>{
 		})	
 	
 	}
+}
+
+let getDetailAction = (productId)=>{
+	return (dispatch,getState)=>{
+		const state = getState().get('productReducer')
+		request({
+			method:'get',
+			url:GET_PRODUCT_DETAIL,
+			data:{
+				id:productId
+			}
+		})
+		.then(result=>{
+			console.log('get product-status::',result)
+			if(result.code == 0){
+				dispatch(setProductDetailAction(result.data))				
+			}else{
+				message.error(result.message)
+			}
+		})
+		.catch(err=>{
+			console.log(err)
+		})	
+	
+	}	
 }
 export {
 	getPageAction,
@@ -222,4 +254,5 @@ export {
 	getRichEditorValAction,
 	getSaveAction,
 	getStatusAction,
+	getDetailAction
 }

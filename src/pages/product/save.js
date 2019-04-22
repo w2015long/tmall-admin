@@ -23,6 +23,11 @@ class ProductSave extends Component{
         	productId:this.props.match.params.productId
         }
         this.handleSubmit = this.handleSubmit.bind(this)
+    }
+    componentDidMount(){
+    	if(this.state.productId){
+    		this.props.handleDetail(this.state.productId)
+    	}
     }	
     handleSubmit(e){
         e.preventDefault();
@@ -38,8 +43,25 @@ class ProductSave extends Component{
 			categoryValidate,
 			imagesValidate,imagesMessage,
 			detailValidate,detailMessage,
-			isSaveFetching
+			isSaveFetching,
+			//商品详情信息
+			parentCategoryId,
+			categoryId,
+			name,
+			images,
+			price,
+			detail,
+			description,
+			stock,
 		} = this.props
+		let fileList = [];
+		if(images){
+			fileList = images.split(',').map((url,index)=>({
+				uid:index,
+				url:url,
+				status: 'done',
+			}))
+		}
 	    const {getFieldDecorator} = this.props.form;
 		return (
 			<div className="ProductSave">
@@ -53,6 +75,7 @@ class ProductSave extends Component{
 	                    <Form.Item label="商品名称">
 	                      {getFieldDecorator('name', {
 	                        rules: [{ required: true, message: '请输入商品名称!' }],
+	                        initialValue:name,
 	                      })(
 	                        <Input placeholder="商品名称" />
 	                      )}
@@ -67,11 +90,16 @@ class ProductSave extends Component{
 	                    		getCategoryId ={(pid,id)=>{
 	                    			handleCategoryId(pid,id)
 	                    		}}
+	                    		//传入id回填到下拉框
+	                    		parentCategoryId={parentCategoryId}
+	                    		categoryId={categoryId}
+
 	                    	/>
 	                    </Form.Item>
 	                    <Form.Item label="商品描述">
 	                      {getFieldDecorator('description', {
 	                        rules: [{ required: true, message: '请输入商品描述!' }],
+	                        initialValue:description,
 	                      })(
 	                        <Input placeholder="请输入商品描述" />
 	                      )}
@@ -79,6 +107,7 @@ class ProductSave extends Component{
 	                    <Form.Item label="商品价格">
 	                      {getFieldDecorator('price', {
 	                        rules: [{ required: true, message: '请输入商品价格!' }],
+	                        initialValue:price,
 	                      })(
 	                        <InputNumber
 	                        	style={{width:200}} 
@@ -104,6 +133,8 @@ class ProductSave extends Component{
 	                    				handleImages(fileList)
 	                    			}
 	                    		}
+	                    		//回传图片路径回填到修改页面
+	                    		fileList={fileList}
 	                    	/>
 	                    </Form.Item>	
 	                    <Form.Item 
@@ -120,11 +151,13 @@ class ProductSave extends Component{
 	                    				handleRichEditorVal(value)
 	                    			}
 	                    		}
+	                    		detail={detail}
 	                    	/>
 	                    </Form.Item>
 	                    <Form.Item label="商品库存">
 	                      {getFieldDecorator('stock', {
 	                        rules: [{ required: true, message: '请输入商品库存!' }],
+	                        initialValue:stock,
 	                      })(
 	                        <InputNumber 
 	                        	style={{width:200}}
@@ -161,6 +194,15 @@ const mapStateToProps = state => {
 		detailValidate:state.get('productReducer').get('detailValidate'),
 		detailMessage:state.get('productReducer').get('detailMessage'),
 		isSaveFetching:state.get('productReducer').get('isSaveFetching'),
+		//商品详情数据
+		parentCategoryId:state.get('productReducer').get('parentCategoryId'),
+		categoryId:state.get('productReducer').get('categoryId'),
+		name:state.get('productReducer').get('name'),
+		images:state.get('productReducer').get('images'),
+		detail:state.get('productReducer').get('detail'),
+		price:state.get('productReducer').get('price'),
+		stock:state.get('productReducer').get('stock'),
+		description:state.get('productReducer').get('description'),		
 	}
 }
 
@@ -181,6 +223,10 @@ const mapDispatchToProps = dispatch=>{
 		handleSave:(err,values)=>{
 			const action = actionCreator.getSaveAction(err,values)
 			dispatch(action)				
+		},
+		handleDetail:(productId)=>{
+			const action = actionCreator.getDetailAction(productId)
+			dispatch(action)			
 		}
 	}
 }
