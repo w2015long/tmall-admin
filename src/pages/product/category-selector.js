@@ -26,8 +26,8 @@ class CategorySelector extends Component{
 	}
 
 	static getDerivedStateFromProps(props,state){
-		console.log('props',props)
-		console.log('state',state)
+		// console.log('props',props)
+		// console.log('state',state)
 		const {parentCategoryId,categoryId} = props
 		const levelOneIdChanged = parentCategoryId != state.levelOneCategoryId
 		const levelTwoIdChanged = categoryId != state.levelTwoCategoryId

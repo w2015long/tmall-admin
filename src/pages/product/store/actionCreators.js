@@ -3,7 +3,7 @@ import {message} from 'antd'
 import {request,setUserName} from 'util'
 import {SAVE_PRODUCT,GET_PRODUCTS,
 	UPDATE_PRODUCTS_ORDER,UPDATE_PRODUCTS_STATUS,
-	GET_PRODUCT_DETAIL } from 'api'
+	GET_PRODUCT_DETAIL,GET_SEARCH_PRODUCT } from 'api'
 
 
 const getPageRequestAction = ()=>{
@@ -251,6 +251,31 @@ let getDetailAction = (productId)=>{
 	
 	}	
 }
+
+let getSearchAction = (keyword)=>{
+	return (dispatch,getState)=>{
+		const state = getState().get('productReducer')
+		request({
+			method:'get',
+			url:GET_SEARCH_PRODUCT,
+			data:{
+				keyword
+			}
+		})
+		.then(result=>{
+			console.log('get_search_product::',result)
+			if(result.code == 0){
+				dispatch(setPageAction(result.data))		
+			}else{
+				message.error(result.message)
+			}
+		})
+		.catch(err=>{
+			console.log(err)
+		})	
+	
+	}
+}
 export {
 	getPageAction,
 	getOrderAction,
@@ -259,5 +284,6 @@ export {
 	getRichEditorValAction,
 	getSaveAction,
 	getStatusAction,
-	getDetailAction
+	getDetailAction,
+	getSearchAction
 }

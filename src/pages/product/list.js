@@ -5,8 +5,8 @@ import {connect} from "react-redux"
 import {actionCreator} from './store/'
 import AdminLayout from 'common/layout'
 import {Breadcrumb,Row,Col,Button,InputNumber,
-	Table,Divider,Switch} from 'antd';
-
+	Table,Divider,Switch,Input} from 'antd';
+const Search = Input.Search;
 
 class ProductList extends Component{
 	constructor(props){
@@ -21,6 +21,7 @@ class ProductList extends Component{
 			handlePage,
 			handleOrder,
 			handleStatus,
+			handleSearch,
 		} = this.props;
 
 		const dataSource = list.map(product=>{
@@ -81,7 +82,7 @@ class ProductList extends Component{
 		  render: (text, record) => (
 		    <span>
 				<Button>
-					<Link to={"/product/"+record.id}>查看详情</Link>
+					<Link to={"/product/detail/"+record.id}>查看详情</Link>
 				</Button>
 		      	<Divider type="vertical" />
 		      	<Button>
@@ -103,7 +104,14 @@ class ProductList extends Component{
 					</Breadcrumb>
 					  <Row style={{marginBottom:20}}>
 						<Col span={6}>
-							<h4>添加商品</h4>
+						    <Search
+						      placeholder="亲输入搜索商品"
+						      enterButton
+						      size="large"
+						      onSearch={keyword =>{
+						      	handleSearch(keyword)
+						      }}
+						    />							
 						</Col>
 						<Col span={6} offset={12}>
 							<Button type="primary">
@@ -159,6 +167,10 @@ const mapDispatchToProps = (dispatch)=>{
 		handleStatus:(id,newStatus)=>{
 			const action = actionCreator.getStatusAction(id,newStatus)
 			dispatch(action)				
+		},
+		handleSearch:(keyword)=>{
+			const action = actionCreator.getSearchAction(keyword)
+			dispatch(action)			
 		}    
     }
 }
