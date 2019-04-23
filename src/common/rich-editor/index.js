@@ -7,6 +7,9 @@ import 'simditor/styles/simditor.css'
 class RichEditor extends Component{
     constructor(props){
         super(props);
+        this.state = {
+        	isBackfill:false
+        }
 		this.toolbar = [
 		  'title','bold','italic','underline',
 		  'strikethrough','fontScale','color','ol',
@@ -35,10 +38,21 @@ class RichEditor extends Component{
 		  }
 		});
 		this.simditor.on('valuechanged',()=>{
-			this.props.getRichEditorVal(this.simditor.getValue()) 
+			this.setState(()=>({isBackfill:true}),()=>{
+				this.props.getRichEditorVal(this.simditor.getValue())
+			})
+			
 		})
     }
-
+    //不能在static getDerivedStateFromProps函数中回填props中数据
+    //原因要用到this.simditor 在静态生命周期函数中拿不到this
+    //所以在componentDidUpdate函数中回填images数据
+    componentDidUpdate(){
+    	if(this.props.detail && !this.state.isBackfill){
+    		this.simditor.setValue(this.props.detail)
+    		this.setState(()=>({isBackfill:true}))
+    	}
+    }
     render(){
     	return(
     		<div>

@@ -33,6 +33,8 @@ class ProductSave extends Component{
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
         	//err信息统一传递到handleSave函数中处理
+        	//values加个id 传到actionsCreator判断是新增还是编辑
+        	values.id = this.state.productId;
           	this.props.handleSave(err,values)
         });
     } 
@@ -60,6 +62,8 @@ class ProductSave extends Component{
 				uid:index,
 				url:url,
 				status: 'done',
+				//编辑时回填
+				response:url
 			}))
 		}
 	    const {getFieldDecorator} = this.props.form;
@@ -151,6 +155,7 @@ class ProductSave extends Component{
 	                    				handleRichEditorVal(value)
 	                    			}
 	                    		}
+	                    		//回传到编辑页面
 	                    		detail={detail}
 	                    	/>
 	                    </Form.Item>

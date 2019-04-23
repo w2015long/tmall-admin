@@ -17,9 +17,18 @@ class UploadImg extends Component{
     }		
 
     static getDerivedStateFromProps(props, state){
-    	const {fileList} = props
-    	console.log('getDerivedStateFromProps',fileList)
+    	let propsHasImg = props.fileList.length > 0
+    	let stateNotImg = state.fileList.length == 0
+    	//state上fileLis没有值 并且props上的fileList有值(save组件传过来的)
+    	if(propsHasImg && stateNotImg){
+    		return{
+    			//回填图片
+    			fileList:props.fileList
+    		}
+    	}
+
     	return null
+    	
     }
 
 	handleCancel (){

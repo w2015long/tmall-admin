@@ -83,6 +83,7 @@ let getRichEditorValAction = (value)=>{
 }
 
 let getSaveAction = (err,values)=>{
+	console.log('>>>>>>>>>>>>>>',values)
 	return (dispatch,getState)=>{
 		const state = getState().get('productReducer')
 		const category = state.get('categoryId')
@@ -107,9 +108,13 @@ let getSaveAction = (err,values)=>{
 
 		if(hasError) return //如果有err终止程序
 
+		let method = 'post' //新增商品
+		if(values.id){//编辑商品请求
+			method = 'put'
+		}
 		dispatch(getSaveRequestAction())	
 		request({
-			method:'post',
+			method:method,
 			url:SAVE_PRODUCT,
 			data:{
 				...values,
@@ -233,7 +238,7 @@ let getDetailAction = (productId)=>{
 			}
 		})
 		.then(result=>{
-			console.log('get product-status::',result)
+			console.log('get product-detail::',result)
 			if(result.code == 0){
 				dispatch(setProductDetailAction(result.data))				
 			}else{
