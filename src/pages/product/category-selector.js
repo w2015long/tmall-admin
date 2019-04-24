@@ -133,6 +133,7 @@ class CategorySelector extends Component{
 	render(){
 		const {levelOneCategoryId, levelOneCategories,
 			levelTwoCategoryId,levelTwoCategories } = this.state;
+		const {disabled} = this.props	
 		return(
 			<div>
 			    <Row>
@@ -140,6 +141,7 @@ class CategorySelector extends Component{
 					<Select
 					  onChange={this.handlelevelOne}
 					  value={levelOneCategoryId}
+					  disabled={disabled}
 					>
 					  {
 					  	levelOneCategories.map(levelOneCategory =>
@@ -156,6 +158,7 @@ class CategorySelector extends Component{
 				      	?<Select
 						  onChange={this.handlelevelTwo}
 						  value={levelTwoCategoryId}
+						  disabled={disabled}
 						>
 						  {
 						  	levelTwoCategories.map(levelTwoCategory =>

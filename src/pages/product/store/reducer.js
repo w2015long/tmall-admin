@@ -40,9 +40,9 @@ const defaultState = fromJS({
 		current:1,
 		pageSize:10,
 		total:0	,
+		keyword:''
 
 })
-
 
 export default (state=defaultState,action)=>{
 	switch (action.type) {
@@ -52,7 +52,8 @@ export default (state=defaultState,action)=>{
 	  			list:fromJS(action.payload.list),
 	  			current:action.payload.current,
 	  			pageSize:action.payload.pageSize,
-	  			total:action.payload.total
+	  			total:action.payload.total,
+	  			keyword:action.payload.keyword || ''
 	  		})
 	  		break;
 		case PAGE_REQUEST:

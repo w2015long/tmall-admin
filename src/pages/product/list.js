@@ -22,6 +22,7 @@ class ProductList extends Component{
 			handleOrder,
 			handleStatus,
 			handleSearch,
+			keyword
 		} = this.props;
 
 		const dataSource = list.map(product=>{
@@ -39,9 +40,18 @@ class ProductList extends Component{
 		  dataIndex: 'id',
 		  key: 'id',
 		}, {
-		  title: '分类名',
+		  title: '商品名称',
 		  dataIndex: 'name',
-		  key: 'name'
+		  key: 'name',
+		  render:(name,record)=>{
+		  	if(keyword){
+		  		const reg = new RegExp('('+keyword+')','ig');
+		  		const html = name.replace(reg,"<b style='color:red;'>$1</b>")
+		  		return <span dangerouslySetInnerHTML={{__html:html}}></span>
+		  	}else{
+		  		return name
+		  	}
+		  }
 		}, {
 		  title: '排序',
 		  dataIndex: 'order',
@@ -131,7 +141,11 @@ class ProductList extends Component{
 						}}
 						onChange={(page)=>{
 							// console.log(page)
-							handlePage(page.current)
+							if(keyword){
+								handleSearch(keyword,page.current)
+							}else{
+								handlePage(page.current)
+							}
 						}}
 						loading={{
 							spinning:isPageFetching,
@@ -150,7 +164,8 @@ const mapStateToProps = (state) => {
 		current:state.get('productReducer').get('current'),
 		pageSize:state.get('productReducer').get('pageSize'),
 		total:state.get('productReducer').get('total'),
-		isPageFetching:state.get('productReducer').get('isPageFetching'),    	
+		isPageFetching:state.get('productReducer').get('isPageFetching'),
+		keyword:state.get('productReducer').get('keyword'),  	
     }
 }
 
@@ -168,8 +183,8 @@ const mapDispatchToProps = (dispatch)=>{
 			const action = actionCreator.getStatusAction(id,newStatus)
 			dispatch(action)				
 		},
-		handleSearch:(keyword)=>{
-			const action = actionCreator.getSearchAction(keyword)
+		handleSearch:(keyword,page)=>{
+			const action = actionCreator.getSearchAction(keyword,page)
 			dispatch(action)			
 		}    
     }

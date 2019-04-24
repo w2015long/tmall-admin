@@ -12,7 +12,8 @@ import RichEditor from 'common/rich-editor'
 import {Breadcrumb,Form, Input,  Icon,
 	Select, Row, Col, Button,InputNumber } from 'antd';
 
-import CategorySelector from './category-selector.js'	
+import CategorySelector from './category-selector.js'
+import './detail.css'	
 
 const { Option } = Select;
 
@@ -43,16 +44,11 @@ class ProductDetail extends Component{
 			description,
 			stock,
 		} = this.props
-		let fileList = [];
+		let imgBox = '';
 		if(images){
-			fileList = images.split(',').map((url,index)=>({
-				uid:index,
-				url:url,
-				status: 'done',
-				//编辑时回填
-				response:url
-			}))
-		}
+			imgBox = images.split(',').map((url,index)=>
+				<li key={index}><img src={url}/></li>
+			)}
 	    const {getFieldDecorator} = this.props.form;
 		return (
 			<div className="ProductSave">
@@ -68,13 +64,14 @@ class ProductDetail extends Component{
 	                        rules: [{ required: true, message: '请输入商品名称!' }],
 	                        initialValue:name,
 	                      })(
-	                        <Input placeholder="商品名称" />
+	                        <Input disabled={true} />
 	                      )}
 	                    </Form.Item>
 	                    <Form.Item 
 	                   		label="所属分类"
 	                    >
 	                    	<CategorySelector
+	                    		disabled={true}
 	                    		//传入id回填到下拉框
 	                    		parentCategoryId={parentCategoryId}
 	                    		categoryId={categoryId}
@@ -86,7 +83,7 @@ class ProductDetail extends Component{
 	                        rules: [{ required: true, message: '请输入商品描述!' }],
 	                        initialValue:description,
 	                      })(
-	                        <Input placeholder="请输入商品描述" />
+	                        <Input disabled={true} />
 	                      )}
 	                    </Form.Item>
 	                    <Form.Item label="商品价格">
@@ -96,31 +93,19 @@ class ProductDetail extends Component{
 	                      })(
 	                        <InputNumber
 	                        	style={{width:200}} 
-	                        	initialValue={0}
-	                        	min={0}
-	                        	formatter={value => `${value}元`}
-	                        	parser={value => value.replace('元', '')}
+	                        	disabled={true}
 	                        />
 	                      )}
 	                    </Form.Item>
 	                    <Form.Item 
 	                    	label="商品图片"
 	                    >
-	                    	<UploadImg
-	                    		action={UPLOAD_PRODUCT_IMG}
-	                    		max={3}
-	                    		//回传图片路径回填到修改页面
-	                    		fileList={fileList}
-	                    	/>
+	                    	<ul className="imgBox">{imgBox}</ul>
 	                    </Form.Item>	
 	                    <Form.Item 
 	                    	label="商品详情"                   	
 	                    >
-	                    	<RichEditor
-	                    		url={UPLOAD_DETAIL_IMG}
-	                    		//回传到编辑页面
-	                    		detail={detail}
-	                    	/>
+	                    	<div dangerouslySetInnerHTML={{__html:detail}}/>
 	                    </Form.Item>
 	                    <Form.Item label="商品库存">
 	                      {getFieldDecorator('stock', {
@@ -129,20 +114,10 @@ class ProductDetail extends Component{
 	                      })(
 	                        <InputNumber 
 	                        	style={{width:200}}
-	                        	initialValue={0}
-	                        	min={0}
-	                        	formatter={value => `${value}件`}
-	                        	parser={value => value.replace('件', '')}
+	                        	disabled={true}
 	                        />
 	                      )}
-	                    </Form.Item>	                    	                    	                    	                    
-				        <Form.Item
-				        	wrapperCol={{ span: 10, offset: 5 }}
-				        >
-				          <Button
-				          type="primary"
-				          >提交</Button>
-				        </Form.Item>						
+	                    </Form.Item> 						
 					</Form>
 				</AdminLayout>
 

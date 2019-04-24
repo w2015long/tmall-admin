@@ -252,14 +252,14 @@ let getDetailAction = (productId)=>{
 	}	
 }
 
-let getSearchAction = (keyword)=>{
-	return (dispatch,getState)=>{
-		const state = getState().get('productReducer')
+let getSearchAction = (keyword,page)=>{
+	return (dispatch)=>{
 		request({
 			method:'get',
 			url:GET_SEARCH_PRODUCT,
 			data:{
-				keyword
+				keyword,
+				page
 			}
 		})
 		.then(result=>{
