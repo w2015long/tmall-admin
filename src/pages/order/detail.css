@@ -1,0 +1,14 @@
+.imgBox{
+	width: 100%;
+}
+.imgBox li{
+	width: 30%;
+}
+.imgBox li img{
+	width: 100%;
+}
+.imgBox li{
+	float: left;
+	list-style: none;
+	margin-right: 2%;
+}
