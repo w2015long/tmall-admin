@@ -17,3 +17,6 @@ export const UPDATE_PRODUCTS_ORDER = SERVER + 'product/updateOrder'
 export const UPDATE_PRODUCTS_STATUS = SERVER + 'product/updateStatus'
 export const GET_PRODUCT_DETAIL = SERVER + 'product/detail'
 export const GET_SEARCH_PRODUCT = SERVER + 'product/search'
+export const GET_ORDERS = SERVER + 'order/';
+export const GET_SEARCH_ORDER = SERVER + 'order/search';
+export const GET_DETAIL_ORDER = SERVER + 'order/detail';

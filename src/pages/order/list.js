@@ -26,30 +26,49 @@ class OrderList extends Component{
 		const dataSource = list.map(order=>{
 			return {
 			  key: order.get('_id'),
-			  name: order.get('name'),
+			  orderNo: order.get('orderNo'),
 			  id: order.get('_id'),
-			  order: order.get('order'),
-			  status:order.get('status'),
+			  payment: '￥'+order.get('payment'),
+			  statusDesc:order.get('statusDesc'),
+			  name:order.get('shopping').get('name'),
+			  phone:order.get('shopping').get('phone'),
+			  createTime:new Date(order.get('createdAt')).toLocaleString()
 			}
 		}).toJS()
 
 		const columns = [{
-		  title: 'id',
-		  dataIndex: 'id',
-		  key: 'id',
-		}, {
-		  title: '商品名称',
-		  dataIndex: 'name',
-		  key: 'name',
-		  render:(name,record)=>{
+		  title: '订单号',
+		  dataIndex: 'orderNo',
+		  key: 'orderNo',
+		  render:(orderNo,record)=>{
 		  	if(keyword){
 		  		const reg = new RegExp('('+keyword+')','ig');
-		  		const html = name.replace(reg,"<b style='color:red;'>$1</b>")
+		  		const html = orderNo.replace(reg,"<b style='color:red;'>$1</b>")
 		  		return <span dangerouslySetInnerHTML={{__html:html}}></span>
 		  	}else{
-		  		return name
+		  		return orderNo
 		  	}
 		  }
+		},{
+			title:'金额',
+			dataIndex:'payment',
+			key:'payment'
+		},{
+			title:'订单状态',
+			dataIndex:'statusDesc',
+			key:'statusDesc'
+		},{
+			title:'收货人',
+			dataIndex:'name',
+			key:'name'
+		},{
+			title:'手机',
+			dataIndex:'phone',
+			key:'phone'
+		},{
+			title:'下单时间',
+			dataIndex:'createTime',
+			key:'createTime'
 		},{
 		  title: '操作',
 		  dataIndex: 'action',
@@ -57,13 +76,8 @@ class OrderList extends Component{
 		  render: (text, record) => (
 		    <span>
 				<Button>
-					<Link to={"/order/detail/"+record.id}>查看详情</Link>
+					<Link to={"/order/detail/"+record.orderNo}>查看详情</Link>
 				</Button>
-		      	<Divider type="vertical" />
-		      	<Button>
-		      		<Link to={"/order/save/"+record.id}>修改</Link>
-		      	</Button>
-
 		    </span>
 		  ),
 		}];
@@ -74,8 +88,8 @@ class OrderList extends Component{
 				<AdminLayout>
 					<Breadcrumb style={{marginBottom:20}}>
 						<Breadcrumb.Item>首页</Breadcrumb.Item>
-						<Breadcrumb.Item>商品管理</Breadcrumb.Item>
-						<Breadcrumb.Item>商品列表</Breadcrumb.Item>
+						<Breadcrumb.Item>订单管理</Breadcrumb.Item>
+						<Breadcrumb.Item>订单列表</Breadcrumb.Item>
 					</Breadcrumb>
 					  <Row style={{marginBottom:20}}>
 						<Col span={6}>
@@ -87,11 +101,6 @@ class OrderList extends Component{
 						      	handleSearch(keyword)
 						      }}
 						    />							
-						</Col>
-						<Col span={6} offset={12}>
-							<Button type="primary">
-								<Link to="/order/save">添加商品</Link>
-							</Button>
 						</Col>
 					  </Row>
 					<Table

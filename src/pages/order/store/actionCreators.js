@@ -1,8 +1,7 @@
 import * as types from './actionTypes.js'
 import {message} from 'antd'
 import {request,setUserName} from 'util'
-import {SAVE_PRODUCT,GET_PRODUCTS,
-	UPDATE_PRODUCTS_ORDER,GET_SEARCH_PRODUCT } from 'api'
+import {GET_ORDERS,GET_SEARCH_ORDER,GET_DETAIL_ORDER } from 'api'
 
 const getPageRequestAction = ()=>{
 	return {
@@ -15,15 +14,18 @@ const getPageDoneAction = ()=>{
 	}
 }
 
-
-
 const setPageAction = payload=>{
 	return {
 		type:types.SET_PAGE,
 		payload
 	}
 }
-
+const setDetailOrderAction = payload=>{
+	return{
+		type:types.SET_DETAIL_ORDER,
+		payload
+	}
+}
 
 
 let getPageAction = (page)=>{
@@ -31,7 +33,7 @@ let getPageAction = (page)=>{
 		dispatch(getPageRequestAction())
 		request({
 			method:'get',
-			url:GET_PRODUCTS,
+			url:GET_ORDERS,
 			data:{page}
 		})
 		.then(result=>{
@@ -51,20 +53,18 @@ let getPageAction = (page)=>{
 	}	
 }
 
-
-
 let getSearchAction = (keyword,page)=>{
 	return (dispatch)=>{
 		request({
 			method:'get',
-			url:GET_SEARCH_PRODUCT,
+			url:GET_SEARCH_ORDER,
 			data:{
 				keyword,
 				page
 			}
 		})
 		.then(result=>{
-			console.log('get_search_product::',result)
+			console.log('get_search_order::',result)
 			if(result.code == 0){
 				dispatch(setPageAction(result.data))		
 			}else{
@@ -77,7 +77,29 @@ let getSearchAction = (keyword,page)=>{
 	
 	}
 }
+let getDetailAction = (orderNo)=>{
+	return (dispatch)=>{
+		request({
+			method:'get',
+			url:GET_DETAIL_ORDER,
+			data:{orderNo}
+		})
+		.then(result=>{
+			console.log('get_detail_order::',result)
+			if(result.code == 0){
+				dispatch(setDetailOrderAction(result.data))		
+			}else{
+				message.error(result.message)
+			}
+		})
+		.catch(err=>{
+			console.log(err)
+		})	
+	
+	}	
+}
 export {
 	getPageAction,
-	getSearchAction
+	getSearchAction,
+	getDetailAction
 }

@@ -1,124 +1,122 @@
 
 import React,{Component} from 'react';
-import {Link} from "react-router-dom"
 import { connect } from 'react-redux'
 import {actionCreator} from './store/'
-import {UPLOAD_PRODUCT_IMG,UPLOAD_DETAIL_IMG} from 'api'
 import AdminLayout from 'common/layout'
-import UploadImg from 'common/upload-img'
-import RichEditor from 'common/rich-editor'
 
 
-import {Breadcrumb,Form, Input,  Icon,
-	Select, Row, Col, Button,InputNumber } from 'antd';
+import {Breadcrumb,Button} from 'antd';
 
-import CategorySelector from './category-selector.js'
 import './detail.css'	
 
-const { Option } = Select;
 
-class ProductDetail extends Component{
+class OrderDetail extends Component{
     constructor(props){
         super(props);
         this.state = {
-        	productId:this.props.match.params.productId
+        	orderNo:this.props.match.params.orderNo
         }
     }
     componentDidMount(){
-    	if(this.state.productId){
-    		this.props.handleDetail(this.state.productId)
+    	if(this.state.orderNo){
+    		this.props.handleOrderDetail(this.state.orderNo)
     	}
     }	
 
-
 	render(){
 		const {
-			
-			//商品详情信息
-			parentCategoryId,
-			categoryId,
-			name,
-			images,
-			price,
-			detail,
-			description,
-			stock,
-		} = this.props
-		let imgBox = '';
-		if(images){
-			imgBox = images.split(',').map((url,index)=>
-				<li key={index}><img src={url}/></li>
-			)}
-	    const {getFieldDecorator} = this.props.form;
+			orderNo,
+			payment,
+			statusDesc,
+			paymentTypeDesc,
+			createdAt,
+			shopping,
+			productList,
+			status
+		} = this.props.order;
+		var createdTime = '';
+		if(createdAt){
+			createdTime = new Date(createdAt).toLocaleString()
+		}
 		return (
-			<div className="ProductSave">
+			<div className="OrderDetail">
 				<AdminLayout style={{marginBottom:20}}>
 				  <Breadcrumb>
 				    <Breadcrumb.Item>首页</Breadcrumb.Item>
-				    <Breadcrumb.Item>商品管理</Breadcrumb.Item>
-				    <Breadcrumb.Item>查看商品</Breadcrumb.Item>
+				    <Breadcrumb.Item>订单管理</Breadcrumb.Item>
+				    <Breadcrumb.Item>订单详情</Breadcrumb.Item>
 				  </Breadcrumb>
-					<Form labelCol={{span:5}} wrapperCol={{span:10}}>
-	                    <Form.Item label="商品名称">
-	                      {getFieldDecorator('name', {
-	                        rules: [{ required: true, message: '请输入商品名称!' }],
-	                        initialValue:name,
-	                      })(
-	                        <Input disabled={true} />
-	                      )}
-	                    </Form.Item>
-	                    <Form.Item 
-	                   		label="所属分类"
-	                    >
-	                    	<CategorySelector
-	                    		disabled={true}
-	                    		//传入id回填到下拉框
-	                    		parentCategoryId={parentCategoryId}
-	                    		categoryId={categoryId}
+	{
 
-	                    	/>
-	                    </Form.Item>
-	                    <Form.Item label="商品描述">
-	                      {getFieldDecorator('description', {
-	                        rules: [{ required: true, message: '请输入商品描述!' }],
-	                        initialValue:description,
-	                      })(
-	                        <Input disabled={true} />
-	                      )}
-	                    </Form.Item>
-	                    <Form.Item label="商品价格">
-	                      {getFieldDecorator('price', {
-	                        rules: [{ required: true, message: '请输入商品价格!' }],
-	                        initialValue:price,
-	                      })(
-	                        <InputNumber
-	                        	style={{width:200}} 
-	                        	disabled={true}
-	                        />
-	                      )}
-	                    </Form.Item>
-	                    <Form.Item 
-	                    	label="商品图片"
-	                    >
-	                    	<ul className="imgBox">{imgBox}</ul>
-	                    </Form.Item>	
-	                    <Form.Item 
-	                    	label="商品详情"                   	
-	                    >
-	                    	<div dangerouslySetInnerHTML={{__html:detail}}/>
-	                    </Form.Item>
-	                    <Form.Item label="商品库存">
-	                      {getFieldDecorator('stock', {
-	                        rules: [{ required: true, message: '请输入商品库存!' }],
-	                        initialValue:stock,
-	                      })(
-	                        <InputNumber 
-	                        	style={{width:200}}
-	                        	disabled={true}
-	                        />
-	                      )}
-	                    </Form.Item> 						
-					</Form>
+		orderNo
+		? <div className="order-detail">
+            <div className="panel">
+                <h2 className="panel-header">订单信息</h2>
+                <div className="pandel-body">
+                    <ul className="order-info">
+                        <li className="order-no">
+                            <span className="lable">订单号:</span>
+                            <span className="text">{orderNo}</span>
+                        </li>
+                        <li className="order-create-time">
+                            <span className="lable">创建时间:</span>
+                            <span className="text">{createdTime}</span>
+                        </li>
+                        <li className="order-shipping-name">
+                            <span className="lable">收件人:</span>
+                            <span className="text">{shopping.name}</span>
+                        </li>
+                        <li className="order-shipping-address">
+                            <span className="lable">收件地址:</span>
+                            <span className="text">{shopping.city}{shopping.address}</span>
+                        </li>   
+                        <li className="order-status">
+                            <span className="lable">订单状态:</span>
+                            <span className="text">{statusDesc}</span>
+                        </li>                   
+                        <li className="order-payment">
+                            <span className="lable">订单金额:</span>
+                            <span className="text">￥{payment}</span>
+                        </li>
+                        <li className="order-payment-type">
+                            <span className="lable">支付方式:</span>
+                            <span className="text">{paymentTypeDesc}</span>
+                        </li>
+                        <li className="order-opreation">
+                        {
+                        	//订单操作
+                        }
+
+                        </li>                                               
+                    </ul>
+                </div>
+            </div>
+            <div className="panel">
+                <h2 className="panel-header">商品列表</h2>
+                <div className="pandel-body">
+                    <ul className="product-title clearfix">
+                        <li className="product-info">
+                            商品
+                        </li>
+                        <li className="product-price">
+                            单价
+                        </li>
+                        <li className="product-count">
+                            数量
+                        </li>
+                        <li className="product-totalPrice">
+                            小计
+                        </li>
+                    </ul>
+                    {
+                    	// 循环商品
+                    }
+                </div>
+            </div>                  
+        </div>  
+    : null		
+
+	}			  
 				</AdminLayout>
 
 			</div>	
@@ -127,29 +125,20 @@ class ProductDetail extends Component{
 }
 const mapStateToProps = state => {
 	return{
-		//商品详情数据
-		parentCategoryId:state.get('productReducer').get('parentCategoryId'),
-		categoryId:state.get('productReducer').get('categoryId'),
-		name:state.get('productReducer').get('name'),
-		images:state.get('productReducer').get('images'),
-		detail:state.get('productReducer').get('detail'),
-		price:state.get('productReducer').get('price'),
-		stock:state.get('productReducer').get('stock'),
-		description:state.get('productReducer').get('description'),		
+		order:state.get('orderReducer').get('order')
 	}
 }
 
 const mapDispatchToProps = dispatch=>{
 	return{
-		handleDetail:(productId)=>{
-			const action = actionCreator.getDetailAction(productId)
+		handleOrderDetail:(orderNo)=>{
+			const action = actionCreator.getDetailAction(orderNo)
 			dispatch(action)			
 		}
 	}
 }
-const WappedProductDetail = Form.create()(ProductDetail)
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(WappedProductDetail)
+)(OrderDetail)
