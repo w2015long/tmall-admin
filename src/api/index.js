@@ -20,3 +20,4 @@ export const GET_SEARCH_PRODUCT = SERVER + 'product/search'
 export const GET_ORDERS = SERVER + 'order/';
 export const GET_SEARCH_ORDER = SERVER + 'order/search';
 export const GET_DETAIL_ORDER = SERVER + 'order/detail';
+export const GET_DELIVER_ORDER = SERVER + 'order/deliver';

@@ -1,7 +1,7 @@
 import * as types from './actionTypes.js'
 import {message} from 'antd'
 import {request,setUserName} from 'util'
-import {GET_ORDERS,GET_SEARCH_ORDER,GET_DETAIL_ORDER } from 'api'
+import {GET_ORDERS,GET_SEARCH_ORDER,GET_DETAIL_ORDER,GET_DELIVER_ORDER } from 'api'
 
 const getPageRequestAction = ()=>{
 	return {
@@ -98,8 +98,30 @@ let getDetailAction = (orderNo)=>{
 	
 	}	
 }
+let getDeliverAction = (orderNo)=>{
+	return (dispatch)=>{
+		request({
+			method:'put',
+			url:GET_DELIVER_ORDER,
+			data:{orderNo}
+		})
+		.then(result=>{
+			console.log('get_deliver_order::',result)
+			if(result.code == 0){
+				dispatch(setDetailOrderAction(result.data))		
+			}else{
+				message.error(result.message)
+			}
+		})
+		.catch(err=>{
+			console.log(err)
+		})	
+	
+	}	
+}
 export {
 	getPageAction,
 	getSearchAction,
-	getDetailAction
+	getDetailAction,
+	getDeliverAction
 }

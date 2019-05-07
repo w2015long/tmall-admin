@@ -5,7 +5,7 @@ import {actionCreator} from './store/'
 import AdminLayout from 'common/layout'
 
 
-import {Breadcrumb,Button} from 'antd';
+import {Breadcrumb,Button,Popconfirm} from 'antd';
 
 import './detail.css'	
 
@@ -85,6 +85,19 @@ class OrderDetail extends Component{
                         <li className="order-opreation">
                         {
                         	//订单操作
+                        	status == '30'
+                        	?<Popconfirm
+                        		placement="top" 
+                        		title="确定已发货"
+                        		cancelText='取消'
+                        		okText='确定'
+                        		onConfirm={()=>{
+                        			this.props.handleOrderDeliver(orderNo)
+                        		}}
+                        	>
+                        		<Button type='primary'>发货</Button>
+                        	</Popconfirm>
+                        	:null
                         }
 
                         </li>                                               
@@ -110,6 +123,25 @@ class OrderDetail extends Component{
                     </ul>
                     {
                     	// 循环商品
+                    	productList.map((product,index)=>{
+                            return  <ul className="product-item" key={index}>
+                                        <li className="product-info text-ellipsis">
+                                            <a href={"/product/detail/"+product.productId} className="link" target="_blank">
+                                                <img src={product.images.split(',')[0]} alt="" />
+                                                <span>{product.name}</span>
+                                            </a>
+                                        </li>
+                                        <li className="product-price">
+                                            ￥{product.price}
+                                        </li>
+                                        <li className="product-count">
+                                            {product.count}
+                                        </li>
+                                        <li className="product-totalPrice">
+                                            ￥{product.totalPrice}
+                                        </li>   
+                                    </ul>
+                    	})
                     }
                 </div>
             </div>                  
@@ -134,6 +166,10 @@ const mapDispatchToProps = dispatch=>{
 		handleOrderDetail:(orderNo)=>{
 			const action = actionCreator.getDetailAction(orderNo)
 			dispatch(action)			
+		},
+		handleOrderDeliver:(orderNo)=>{
+			const action = actionCreator.getDeliverAction(orderNo)
+			dispatch(action)				
 		}
 	}
 }
